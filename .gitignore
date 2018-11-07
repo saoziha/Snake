@@ -1,6 +1,6 @@
 cocos2d/
 proj.ios_mac/
 proj.linux/
-Snake/proj.win32/Debug.win32/
-Snake/proj.win32/EndlessSnake.VC.db/
-Snake/proj.win32/EndlessSnake.VC.VC.opendb/
+proj.win32/Debug.win32/
+proj.win32/EndlessSnake.VC.db/
+*.opendb
