@@ -7,6 +7,7 @@
 USING_NS_CC;
 Rock *r1;
 Snake *s;
+Rock * r2;
 Scene* SceneNewGame::createScene()
 {
 	return SceneNewGame::create();
