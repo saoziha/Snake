@@ -1,9 +1,12 @@
 #include "SceneNewGame.h"
 #include "MenuScreen.h"
 #include "cocos2d.h"
+#include "Rock.h"
+#include "Snake.h"
 
 USING_NS_CC;
-
+Rock *r1;
+Snake *s;
 Scene* SceneNewGame::createScene()
 {
 	return SceneNewGame::create();
@@ -28,5 +31,19 @@ bool SceneNewGame::init()
 	auto menuImage = Menu::create(closeItem1, nullptr);
 	menuImage->setPosition(Vec2::ZERO);
 	addChild(menuImage);
+
+	r1 = new Rock(this);
+	r1->Init();
+	r1->setAlive(true);
+	
+	s = new Snake(this);
+	s->Init();
+	s->setAlive(true);
+	scheduleUpdate();
 	return true;
+}
+
+void SceneNewGame::update(float delta)
+{
+	r1->Update();
 }

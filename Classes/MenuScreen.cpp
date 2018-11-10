@@ -2,6 +2,7 @@
 #include "SceneAbout.h"
 #include "SceneNewGame.h"
 #include "SceneOption.h"
+#include "Snake.h"
 
 USING_NS_CC;
 Sprite *coin;
