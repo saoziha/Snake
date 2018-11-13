@@ -3,11 +3,12 @@
 #include "cocos2d.h"
 #include "Rock.h"
 #include "Snake.h"
+#include "FakeRock.h"
 
 USING_NS_CC;
 Rock *r1;
 Snake *s;
-Rock * r2;
+FakeRock *fr;
 Scene* SceneNewGame::createScene()
 {
 	return SceneNewGame::create();
@@ -36,6 +37,10 @@ bool SceneNewGame::init()
 	r1 = new Rock(this);
 	r1->Init();
 	r1->setAlive(true);
+
+	fr = new FakeRock(this);
+	fr->Init();
+	fr->setAlive(true);
 	
 	s = new Snake(this);
 	s->Init();
@@ -47,4 +52,5 @@ bool SceneNewGame::init()
 void SceneNewGame::update(float delta)
 {
 	r1->Update();
+	fr->Update();
 }
