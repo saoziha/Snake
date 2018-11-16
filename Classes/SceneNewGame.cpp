@@ -9,6 +9,8 @@ USING_NS_CC;
 Rock *r1;
 Snake *s;
 FakeRock *fr;
+Sprite *snake;
+
 Scene* SceneNewGame::createScene()
 {
 	return SceneNewGame::create();
@@ -34,6 +36,23 @@ bool SceneNewGame::init()
 	menuImage->setPosition(Vec2::ZERO);
 	addChild(menuImage);
 
+	auto screenSize = Director::getInstance()->getVisibleSize();
+
+	// Snake's movement
+	Vector<SpriteFrame*> frames;
+	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 150, 150)));
+	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 150, 150)));
+	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 150, 150)));
+
+	auto animation = Animation::createWithSpriteFrames(frames, 0.1f);
+
+	auto animate = Animate::create(animation);
+
+	snake = Sprite::create();
+	snake->setPosition(screenSize /2);
+	addChild(snake);
+	snake->runAction(RepeatForever::create(animate));
+
 	r1 = new Rock(this);
 	r1->Init();
 	r1->setAlive(true);
@@ -42,9 +61,9 @@ bool SceneNewGame::init()
 	fr->Init();
 	fr->setAlive(true);
 	
-	s = new Snake(this);
-	s->Init();
-	s->setAlive(true);
+	//s = new Snake(this);
+	//s->Init();
+	//s->setAlive(true);
 	scheduleUpdate();
 	return true;
 }
