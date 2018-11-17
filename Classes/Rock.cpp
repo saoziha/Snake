@@ -3,9 +3,29 @@
 #include "Define.h"
 USING_NS_CC;
 
-Rock::Rock(cocos2d::Scene * scene)
+Rock::Rock(cocos2d::Scene * scene, int type)
 {
-	mSprite = Sprite::create(IMG_ROCK);
+	switch (type)
+	{
+	case 1:
+		mSprite = Sprite::create(IMG_ROCK1);
+		break;
+	case 2:
+		mSprite = Sprite::create(IMG_ROCK2);
+		break;
+	case 3:
+		mSprite = Sprite::create(IMG_ROCK3);
+		break;
+	case 4:
+		mSprite = Sprite::create(IMG_ROCK4);
+		break;
+	case 5:
+		mSprite = Sprite::create(IMG_ROCK5);
+		break;
+	default:
+		break;
+	}
+	
 	scene->addChild(mSprite);
 }
 
@@ -37,3 +57,14 @@ void Rock::Update()
 		}
 	}
 }
+
+void Rock::setType(int type)
+{
+	this->type = type;
+}
+
+int Rock::getType()
+{
+	return this->type;
+}
+
