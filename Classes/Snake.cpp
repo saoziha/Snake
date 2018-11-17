@@ -16,7 +16,7 @@ Snake::~Snake()
 
 void Snake::Init()
 {
-	setPosition(Vec2(SCREEN_W / 2, 100));
+	setPosition(Vec2(SCREEN_W / 2, 200));
 }
 
 void Snake::Update()
