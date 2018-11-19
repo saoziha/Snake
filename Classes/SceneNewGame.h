@@ -14,7 +14,7 @@ public:
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
-
+	void calculateScore();
 private:
 	std::vector<Rock*> mRocks;
 };

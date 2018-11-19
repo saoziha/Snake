@@ -17,3 +17,7 @@
 #define MAX_ROCK 20
 
 #define ROCK_GENERATING_STEP 30
+
+#define SCORE_X 370
+#define SCORE_Y 700
+#define FRAME_CALCULATE_SCORE 5

@@ -9,6 +9,8 @@ Snake *snake;
 float xMovement;
 int framesCount; 
 float newPosX;
+int score;
+Label *label;
 
 Scene* SceneNewGame::createScene()
 {
@@ -22,22 +24,22 @@ bool SceneNewGame::init()
 		return false;
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto screenSize = Director::getInstance()->getVisibleSize();
+	framesCount = 0;
 
 	// Add button back
 	auto closeItem1 = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		[](Ref *event) {
 		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));
 	});
-
 	closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
 	auto menuImage = Menu::create(closeItem1, nullptr);
 	menuImage->setPosition(Vec2::ZERO);
-	addChild(menuImage);
+	addChild(menuImage);	
 
-	auto screenSize = Director::getInstance()->getVisibleSize();
-
-	framesCount = 0;	
+	//Score
+	calculateScore();
 
 	snake = new Snake(this);
 	snake->Init();
@@ -46,8 +48,8 @@ bool SceneNewGame::init()
 	auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = CC_CALLBACK_2(SceneNewGame::onKeyPressed, this);
 	listener->onKeyReleased = CC_CALLBACK_2(SceneNewGame::onKeyReleased, this);
-
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+
 
 	int typeRock;
 	for (int i = 0; i < MAX_ROCK; i++)
@@ -70,8 +72,7 @@ void SceneNewGame::update(float delta)
 	snake->Update();
 	
 	newPosX = snake->GetPosistion().x + (xMovement * 10.f);
-	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
-	//log("X %f", snake->GetPosistion().x);
+	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));	
 	
 	//generating rock
 	if (framesCount % ROCK_GENERATING_STEP == 0)
@@ -89,6 +90,14 @@ void SceneNewGame::update(float delta)
 		}
 	}
 
+	//UPDATE SCORE
+	score++;
+	if (framesCount % FRAME_CALCULATE_SCORE == 0)
+	{
+		label->setString("Score: " + std::to_string(score));
+	}
+
+	//UPDATE COLISSION
 	snake->Colission(mRocks);
 }
 
@@ -130,4 +139,14 @@ void SceneNewGame::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2
 		xMovement--;
 		break;
 	}
+}
+
+void SceneNewGame::calculateScore()
+{
+	label = Label::createWithTTF("Score: 0", "fonts/Marker Felt.ttf ", 30);
+	label->setColor(Color3B::RED);
+	label->setAlignment(cocos2d::TextHAlignment::CENTER);
+	label->setPosition(Vec2(SCORE_X, SCORE_Y));
+	addChild(label);
+	
 }
