@@ -5,11 +5,10 @@
 #include "Snake.h"
 
 USING_NS_CC;
-Rock *r1;
-Snake *s;
-Sprite *snake;
+Snake *snake;
 float xMovement;
 int framesCount; 
+float newPosX;
 
 Scene* SceneNewGame::createScene()
 {
@@ -38,21 +37,11 @@ bool SceneNewGame::init()
 
 	auto screenSize = Director::getInstance()->getVisibleSize();
 
-	framesCount = 0;
-	// Snake's movement
-	Vector<SpriteFrame*> frames;
-	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 150, 150)));
-	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 150, 150)));
-	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 150, 150)));
+	framesCount = 0;	
 
-	auto animation = Animation::createWithSpriteFrames(frames, 0.1f);
-	auto animate = Animate::create(animation);
-
-	snake = Sprite::create();
-	snake->setPosition(screenSize /2);
-	addChild(snake);
-	snake->runAction(RepeatForever::create(animate));
-
+	snake = new Snake(this);
+	snake->Init();
+	
 	//KeyBoard listener
 	auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = CC_CALLBACK_2(SceneNewGame::onKeyPressed, this);
@@ -63,44 +52,44 @@ bool SceneNewGame::init()
 	int typeRock;
 	for (int i = 0; i < MAX_ROCK; i++)
 	{
-		typeRock = random(1, 5);
+		typeRock = 1;
 		Rock* rock = new Rock(this, typeRock);
 		rock->setType(typeRock);
 		rock->setAlive(false);
 		mRocks.push_back(rock);
 	}
 	
-	//s = new Snake(this);
-	//s->Init();
-	//s->setAlive(true);
 	scheduleUpdate();
-	return true;
+	return true;	
 }
 
 void SceneNewGame::update(float delta)
 {
 	framesCount++;
 
-	float newPosX;	
-	newPosX = snake->getPositionX() + (xMovement * 10.f);
-	snake->setPosition(newPosX, snake->getPositionY());
-	log("X %f", snake->getPositionX());
+	snake->Update();
+	
+	newPosX = snake->GetPosistion().x + (xMovement * 10.f);
+	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
+	//log("X %f", snake->GetPosistion().x);
 	
 	//generating rock
 	if (framesCount % ROCK_GENERATING_STEP == 0)
 	{
 		GenerateRock();
-	}
-
+	}	
+	
 	//update rock
 	for (int i = 0; i < mRocks.size(); i++)
 	{
 		Rock *r = mRocks.at(i);
 		if (r->isAlive())
 		{
-			r->Update();
+			r->Update();			
 		}
 	}
+
+	snake->Colission(mRocks);
 }
 
 void SceneNewGame::GenerateRock()

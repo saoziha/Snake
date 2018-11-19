@@ -12,6 +12,7 @@ public:
 	void setAlive(bool isAlive);
 	bool isAlive();
 
+	cocos2d::Rect GetBound();
 protected:
 	cocos2d::Sprite* mSprite;
 	bool mIsAlive;

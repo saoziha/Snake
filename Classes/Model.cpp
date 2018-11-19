@@ -35,3 +35,8 @@ bool Model::isAlive()
 {
 	return mIsAlive;
 }
+
+cocos2d::Rect Model::GetBound()
+{
+	return mSprite->getBoundingBox();
+}
