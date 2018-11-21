@@ -8,7 +8,7 @@ USING_NS_CC;
 Snake *snake;
 float xMovement;
 int framesCount; 
-float newPosX;
+float newPosX=0;
 int score;
 Label *label;
 
@@ -54,7 +54,7 @@ bool SceneNewGame::init()
 	int typeRock;
 	for (int i = 0; i < MAX_ROCK; i++)
 	{
-		typeRock = 1;
+		typeRock = random(1,5);
 		Rock* rock = new Rock(this, typeRock);
 		rock->setType(typeRock);
 		rock->setAlive(false);
@@ -71,9 +71,13 @@ void SceneNewGame::update(float delta)
 
 	snake->Update();
 	
-	newPosX = snake->GetPosistion().x + (xMovement * 10.f);
-	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));	
-	
+	newPosX = snake->GetPosistion().x + STEP *xMovement;
+
+	if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
+	{
+		snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
+	}
+		
 	//generating rock
 	if (framesCount % ROCK_GENERATING_STEP == 0)
 	{
@@ -92,6 +96,7 @@ void SceneNewGame::update(float delta)
 
 	//UPDATE SCORE
 	score++;
+
 	if (framesCount % FRAME_CALCULATE_SCORE == 0)
 	{
 		label->setString("Score: " + std::to_string(score));
@@ -147,6 +152,5 @@ void SceneNewGame::calculateScore()
 	label->setColor(Color3B::RED);
 	label->setAlignment(cocos2d::TextHAlignment::CENTER);
 	label->setPosition(Vec2(SCORE_X, SCORE_Y));
-	addChild(label);
-	
+	addChild(label);	
 }
