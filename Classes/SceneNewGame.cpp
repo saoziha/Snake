@@ -12,6 +12,12 @@ float newPosX=0;
 int score;
 Label *label;
 
+bool isTouchDown;
+
+float initialTouchPos0;
+float currentTouchPos0;
+
+
 Scene* SceneNewGame::createScene()
 {
 	return SceneNewGame::create();
@@ -45,11 +51,20 @@ bool SceneNewGame::init()
 	snake->Init();
 	
 	//KeyBoard listener
-	auto listener = EventListenerKeyboard::create();
+	/*auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = CC_CALLBACK_2(SceneNewGame::onKeyPressed, this);
 	listener->onKeyReleased = CC_CALLBACK_2(SceneNewGame::onKeyReleased, this);
-	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);*/
 
+
+	auto listenerTouch = EventListenerTouchOneByOne::create();
+	listenerTouch->onTouchBegan = CC_CALLBACK_2(SceneNewGame::onTouchBegan, this);
+	listenerTouch->onTouchMoved = CC_CALLBACK_2(SceneNewGame::onTouchMoved, this);
+	listenerTouch->onTouchEnded = CC_CALLBACK_2(SceneNewGame::onTouchEnded, this);
+	listenerTouch->onTouchCancelled = CC_CALLBACK_2(SceneNewGame::onTouchCancelled, this);
+
+	listenerTouch->setSwallowTouches(true);
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listenerTouch, this);
 
 	int typeRock;
 	for (int i = 0; i < MAX_ROCK; i++)
@@ -71,13 +86,12 @@ void SceneNewGame::update(float delta)
 
 	snake->Update();
 	
-	newPosX = snake->GetPosistion().x + STEP *xMovement;
-
+	/*newPosX = snake->GetPosistion().x + STEP *xMovement;
 	if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
 	{
 		snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
-	}
-		
+	}*/		
+
 	//generating rock
 	if (framesCount % ROCK_GENERATING_STEP == 0)
 	{
@@ -93,17 +107,19 @@ void SceneNewGame::update(float delta)
 			r->Update();			
 		}
 	}
-
+		
 	//UPDATE SCORE
 	score++;
-
 	if (framesCount % FRAME_CALCULATE_SCORE == 0)
 	{
 		label->setString("Score: " + std::to_string(score));
 	}
 
+	//newPosX = snake->GetPosistion().x + STEP;
+	
+
 	//UPDATE COLISSION
-	snake->Colission(mRocks);
+	//snake->Colission(mRocks);
 }
 
 void SceneNewGame::GenerateRock()
@@ -144,6 +160,50 @@ void SceneNewGame::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2
 		xMovement--;
 		break;
 	}
+}
+
+bool SceneNewGame::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	initialTouchPos0 = touch->getLocation().x;	
+	//currentTouchPos0 = touch->getLocation().x;	
+
+	isTouchDown = true;
+
+	return true;
+}
+
+void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	currentTouchPos0 = touch->getLocation().x;
+	
+	if (true == isTouchDown)
+	{
+		if (initialTouchPos0 - currentTouchPos0  >= 0)
+		{
+			CCLOG("SWIPED LEFT");			
+			isTouchDown = false;
+		}
+		else if (initialTouchPos0 - currentTouchPos0 <= 0)
+		{
+			CCLOG("SWIPED RIGHT");			
+			isTouchDown = false;
+		}
+	}
+
+	if (initialTouchPos0 - currentTouchPos0 >= MAX_MOVE_LEFT_W && initialTouchPos0 - currentTouchPos0 <= MAX_MOVE_RIGHT_W)
+	{
+		snake->setPosition(Vec2(STEP, snake->GetPosistion().y));
+	}
+}
+
+void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	isTouchDown = false;
+}
+
+void SceneNewGame::onTouchCancelled(cocos2d::Touch * touch, cocos2d::Event * event)
+{
+	onTouchEnded(touch, event);
 }
 
 void SceneNewGame::calculateScore()

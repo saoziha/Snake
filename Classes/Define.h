@@ -28,6 +28,6 @@
 #define SCORE_OBSTACLE_4 200
 #define SCORE_OBSTACLE_5 250
 
-#define STEP 48
+#define STEP SCREEN_W/5
 #define MAX_MOVE_RIGHT_W 432
 #define MAX_MOVE_LEFT_W 48
