@@ -6,7 +6,7 @@
 
 USING_NS_CC;
 Snake *snake;
-float xMovement;
+float xMovement = 0;
 int framesCount; 
 float newPosX=0;
 int score;
@@ -50,7 +50,7 @@ bool SceneNewGame::init()
 	snake = new Snake(this);
 	snake->Init();
 	
-	//KeyBoard listener
+	/*KeyBoard listener*/
 	/*auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = CC_CALLBACK_2(SceneNewGame::onKeyPressed, this);
 	listener->onKeyReleased = CC_CALLBACK_2(SceneNewGame::onKeyReleased, this);
@@ -86,11 +86,11 @@ void SceneNewGame::update(float delta)
 
 	snake->Update();
 	
-	/*newPosX = snake->GetPosistion().x + STEP *xMovement;
+	newPosX = snake->GetPosistion().x + STEP *xMovement;
 	if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
 	{
 		snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
-	}*/		
+	}		
 
 	//generating rock
 	if (framesCount % ROCK_GENERATING_STEP == 0)
@@ -164,19 +164,32 @@ void SceneNewGame::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2
 
 bool SceneNewGame::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event)
 {
-	initialTouchPos0 = touch->getLocation().x;	
 	//currentTouchPos0 = touch->getLocation().x;	
+	initialTouchPos0 = touch->getLocation().x;
 
-	isTouchDown = true;
+	if (initialTouchPos0 < 240)
+	{
+		CCLOG("Touched LEFT");
+		xMovement--;
+	}
+	if (initialTouchPos0 > 240)
+	{
+		CCLOG("Touched RIGHT");
+		xMovement++;
+	}
+	
+	/*isTouchDown = true;*/
 
 	return true;
 }
 
 void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 {
-	currentTouchPos0 = touch->getLocation().x;
-	
-	if (true == isTouchDown)
+	isTouchDown = true;
+
+
+	// swipe button
+	/*if (true == isTouchDown)
 	{
 		if (initialTouchPos0 - currentTouchPos0  >= 0)
 		{
@@ -193,11 +206,20 @@ void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 	if (initialTouchPos0 - currentTouchPos0 >= MAX_MOVE_LEFT_W && initialTouchPos0 - currentTouchPos0 <= MAX_MOVE_RIGHT_W)
 	{
 		snake->setPosition(Vec2(STEP, snake->GetPosistion().y));
-	}
+	}*/
 }
 
 void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
 {
+	initialTouchPos0 = touch->getLocation().x;
+	if (initialTouchPos0 < 240)
+	{
+		xMovement++;
+	}
+	if (initialTouchPos0 > 240)
+	{
+		xMovement--;
+	}
 	isTouchDown = false;
 }
 
