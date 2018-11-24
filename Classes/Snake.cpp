@@ -28,13 +28,23 @@ Snake::~Snake()
 
 void Snake::Init()
 {
-	setPosition(Vec2(SCREEN_W / 2, 200));
-	
+	setPosition(Vec2(SCREEN_W / 2, SNAKE_Y_POSITION));
+
+	for (int i = 0; i < BULLET; i++)
+	{
+		Bullet *b = new Bullet(mScene);
+		mBullets.push_back(b);
+		b->setAlive(false);
+	}
 }
 
 void Snake::Update()
-{
-
+{		
+	for (int i = 0; i < mBullets.size(); i++)
+	{
+		Bullet *bullet = mBullets.at(i);
+		bullet->Update();		
+	}	
 }
 
 void Snake::Colission(std::vector<Rock*> mRocks)
@@ -88,4 +98,18 @@ void Snake::Action()
 	auto fadeOut = FadeOut::create(0.1f);
 	auto action = Repeat::create(Sequence::create(fadeOut, fadeIn, nullptr), 2);
 	mSprite->runAction(action);
+}
+
+void Snake::Shoot()
+{
+	for (int i = 0; i < mBullets.size(); i++)
+	{
+		Bullet *bullet = mBullets.at(i);
+		if (!bullet->isAlive())
+		{
+			bullet->setAlive(true);
+			bullet->setPosition(GetPosistion() + Vec2(0, mSprite->getContentSize().height / 2));
+			break;
+		}
+	}
 }

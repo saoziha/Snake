@@ -20,7 +20,7 @@ public:
 	virtual void onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event *event);
 
 
-	void calculateScore();
+	void TextOnScreen();
 private:
 	std::vector<Rock*> mRocks;
 };

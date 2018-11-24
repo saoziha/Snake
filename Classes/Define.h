@@ -5,7 +5,7 @@
 #define SCREEN_H 800
 
 #define IMG_SNAKE "Snake.png"
-
+#define IMG_BULLET "bullet.png"
 #define IMG_ROCK1 "Obstaclelv1.png"
 #define IMG_ROCK2 "Obstaclelv2.png"
 #define IMG_ROCK3 "Obstaclelv3.png"
@@ -31,3 +31,9 @@
 #define STEP SCREEN_W/5
 #define MAX_MOVE_RIGHT_W 432
 #define MAX_MOVE_LEFT_W 48
+
+#define SNAKE_Y_POSITION 200
+#define BULLET 5
+#define BULLET_SHOOT_STEP 7
+
+#define SCREEN_HALF SCREEN_W/2
