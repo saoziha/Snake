@@ -11,10 +11,14 @@
 #define IMG_ROCK3 "Obstaclelv3.png"
 #define IMG_ROCK4 "Obstaclelv4.png"
 #define IMG_ROCK5 "Obstaclelv5.png"
+#define IMG_BULLET_ITEM "bullet_item.png"
 
 #define ROCK_FALL_STEP_MIN 5
 #define ROCK_FALL_STEP_MAX 10
+#define BULLET_FALL_STEP_MIN 5
+#define BULLET_FALL_STEP_MAX 11
 #define MAX_ROCK 20
+#define MAX_BULLET 20
 
 #define ROCK_GENERATING_STEP 30
 
@@ -33,7 +37,7 @@
 #define MAX_MOVE_LEFT_W 48
 
 #define SNAKE_Y_POSITION 200
-#define BULLET 5
+#define INITIAL_BULLET 5
 #define BULLET_SHOOT_STEP 7
 
 #define SCREEN_HALF SCREEN_W/2

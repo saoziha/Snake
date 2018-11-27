@@ -51,6 +51,9 @@
     <ClCompile Include="..\Classes\Bullet.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>src\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -87,6 +90,9 @@
       <Filter>src\Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Bullet.h">
+      <Filter>src\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Item.h">
       <Filter>src\Model</Filter>
     </ClInclude>
   </ItemGroup>

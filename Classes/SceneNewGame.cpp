@@ -3,6 +3,7 @@
 #include "cocos2d.h"
 #include "Rock.h"
 #include "Snake.h"
+#include "Item.h"
 
 USING_NS_CC;
 Snake *snake;
@@ -12,6 +13,8 @@ float newPosX = 0;
 int score;
 Label *label;
 Label *bulletLabel;
+
+int currentBullet = INITIAL_BULLET;
 
 bool isTouchDown;
 
@@ -43,8 +46,17 @@ bool SceneNewGame::init()
 
 	auto shootButton = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		[](Ref *event) {
-		snake->Shoot();
+		snake->Shoot();		
+		if (currentBullet > 0)
+		{
+			currentBullet--;
+		}
+		else
+		{
+			currentBullet = 0;
+		}		
 	});
+	
 	shootButton->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, SNAKE_Y_POSITION);
 	
 	auto menuImage = Menu::create(closeItem1, shootButton, nullptr);
@@ -83,6 +95,13 @@ bool SceneNewGame::init()
 		mRocks.push_back(rock);
 	}
 
+	for (int i = 0; i < 1; i++)
+	{		
+		Item* item_bullet = new Item(this);		
+		item_bullet->setAlive(false);
+		bulletItems.push_back(item_bullet);
+	}
+
 	scheduleUpdate();
 	return true;
 }
@@ -91,7 +110,7 @@ void SceneNewGame::update(float delta)
 {
 	framesCount++;
 	snake->Update();	
-	
+	// KEY ARROWS
 	/*	newPosX = snake->GetPosistion().x + STEP *xMovement;
 	if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
 	{
@@ -102,6 +121,7 @@ void SceneNewGame::update(float delta)
 	if (framesCount % ROCK_GENERATING_STEP == 0)
 	{
 		GenerateRock();
+		GenerateBulletItem();
 	}
 
 	//update rock
@@ -114,6 +134,16 @@ void SceneNewGame::update(float delta)
 		}
 	}
 
+	//update bullet item
+	for (int i = 0; i < bulletItems.size(); i++)
+	{
+		Item *item = bulletItems.at(i);
+		if (item->isAlive())
+		{
+			item->Update();
+		}
+	}
+
 	//UPDATE SCORE
 	score++;
 	if (framesCount % FRAME_CALCULATE_SCORE == 0)
@@ -121,10 +151,13 @@ void SceneNewGame::update(float delta)
 		label->setString("Score: " + std::to_string(score));
 	}
 
-	//newPosX = snake->GetPosistion().x + STEP;
+	//Update bullet number		
+	bulletLabel->setString("Bullets: " + std::to_string(currentBullet));
+		
 
 	//UPDATE COLISSION
 	snake->Colission(mRocks);
+	snake->CollisionItem(bulletItems);
 }
 
 void SceneNewGame::GenerateRock()
@@ -136,6 +169,20 @@ void SceneNewGame::GenerateRock()
 		{
 			r->setAlive(true);
 			r->Init();
+			break;
+		}
+	}
+}
+
+void SceneNewGame::GenerateBulletItem()
+{
+	for (int i = 0; i < bulletItems.size(); i++)
+	{
+		Item *item_bullet = bulletItems.at(i);
+		if (!item_bullet->isAlive())
+		{
+			item_bullet->setAlive(true);
+			item_bullet->Init();
 			break;
 		}
 	}

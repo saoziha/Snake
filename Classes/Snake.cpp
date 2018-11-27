@@ -1,14 +1,16 @@
-#include "Snake.h"
+﻿#include "Snake.h"
 #include "Define.h"
 #include "cocos2d.h"
+#include "SceneNewGame.h"
 
 USING_NS_CC;
+int SceneNewGame::currentBullet = INITIAL_BULLET;
+std::vector<Bullet*> mBullets;
 
 Snake::Snake(cocos2d::Scene * scene)
 {
 	mScene = scene;
-
-	//mSprite = Sprite::create(IMG_SNAKE);
+	
 	Vector<SpriteFrame*> frames;
 	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 72, 128)));
 	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 72, 128)));
@@ -30,7 +32,7 @@ void Snake::Init()
 {
 	setPosition(Vec2(SCREEN_W / 2, SNAKE_Y_POSITION));
 
-	for (int i = 0; i < BULLET; i++)
+	for (int i = 0; i < INITIAL_BULLET; i++)
 	{
 		Bullet *b = new Bullet(mScene);
 		mBullets.push_back(b);
@@ -103,13 +105,37 @@ void Snake::Action()
 void Snake::Shoot()
 {
 	for (int i = 0; i < mBullets.size(); i++)
-	{
+	{		
 		Bullet *bullet = mBullets.at(i);
-		if (!bullet->isAlive())
+		if ((!bullet->isAlive()) && bullet->getId() == 1)
 		{
 			bullet->setAlive(true);
-			bullet->setPosition(GetPosistion() + Vec2(0, mSprite->getContentSize().height / 2));
+			bullet->setPosition(GetPosistion() + Vec2(0, mSprite->getContentSize().height / 2));							
 			break;
-		}
-	}
+		}				
+	}		
 }
+
+void Snake::CollisionItem(std::vector<Item*> mItems)
+{
+	for (int i = 0; i < mItems.size(); i++)
+	{
+		Item *item = mItems.at(i);
+		if (item->isAlive())
+		{
+			if (item->GetBound().intersectsRect(this->GetBound()))
+			{
+				item->setAlive(false);				
+				SceneNewGame::currentBullet+=5;	
+				for (int i = 0; i < 5; i++)
+				{
+					Bullet *b = new Bullet(mScene);
+					b->setAlive(false);
+					mBullets.push_back(b);
+				}
+				break;;
+			}
+		}
+	}		
+}
+

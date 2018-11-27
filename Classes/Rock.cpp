@@ -46,7 +46,6 @@ void Rock::Init()
 
 void Rock::Update()
 {
-
 	if (isAlive())
 	{
 		setPosition(GetPosistion() - Vec2(0, mMoveStep));
