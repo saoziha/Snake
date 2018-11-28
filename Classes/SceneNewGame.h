@@ -8,6 +8,7 @@ class SceneNewGame : public cocos2d::Scene
 public:
 	static cocos2d::Scene* createScene();	
 	static int currentBullet;
+	static int score;
 
 	virtual bool init();
 	virtual void update(float delta);

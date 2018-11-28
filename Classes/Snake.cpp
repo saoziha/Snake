@@ -5,6 +5,7 @@
 
 USING_NS_CC;
 int SceneNewGame::currentBullet = INITIAL_BULLET;
+int SceneNewGame::score;
 std::vector<Bullet*> mBullets;
 
 Snake::Snake(cocos2d::Scene * scene)
@@ -59,38 +60,54 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 		{
 			if(r->GetBound().intersectsRect(this->GetBound()))
 			{
-				if (r->getType() == 1)
+				if (r->getHealth() == 1)
 				{
 					r->setAlive(false);
 					Action();
 					continue;
 				}
-				else if (r->getType() == 2)
+				else if (r->getHealth() == 2)
 				{
 					r->setAlive(false);
 					Action();
 					continue;
 				}
-				else if (r->getType() == 3)
+				else if (r->getHealth() == 3)
 				{
 					r->setAlive(false);
 					Action();
 					continue;
 				}
-				else if (r->getType() == 4)
+				else if (r->getHealth() == 4)
 				{
 					r->setAlive(false);
 					Action();
 					continue;
 				}
-				else if (r->getType() == 5)
+				else if (r->getHealth() == 5)
 				{
 					r->setAlive(false);
 					Action();
 					continue;
 				}
 			}
-		}
+
+			for (int j = 0; j < mBullets.size(); j++)
+			{
+				Bullet *b = mBullets.at(j);
+				if (b->isAlive() && r->GetBound().intersectsRect(b->GetBound()))
+				{											
+					b->setId(-1);						
+					b->setAlive(false);
+					r->ReduceHealth();
+					if (r->getHealth() == 0)
+					{
+						SceneNewGame::score += 50;
+						r->setAlive(false);
+					}					
+				}
+			}
+		}		
 	}
 }
 

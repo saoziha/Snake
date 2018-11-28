@@ -25,7 +25,10 @@ Rock::Rock(cocos2d::Scene * scene, int type)
 	default:
 		break;
 	}
-	
+		
+	this->setType(type);
+	this->setHealth(type);
+	this->reduction = 1;
 	scene->addChild(mSprite);
 }
 
@@ -41,7 +44,8 @@ void Rock::Init()
 
 	setPosition(Vec2(x, y));
 
-	mMoveStep = random(ROCK_FALL_STEP_MIN, ROCK_FALL_STEP_MAX);
+	//mMoveStep = random(ROCK_FALL_STEP_MIN, ROCK_FALL_STEP_MAX);
+	mMoveStep = 1;
 }
 
 void Rock::Update()
@@ -52,9 +56,24 @@ void Rock::Update()
 
 		if (GetPosistion().y < -mSprite->getContentSize().height)
 		{
-			setAlive(false);
+			setAlive(false);			
 		}
 	}
+}
+
+int Rock::getHealth()
+{
+	return this->health;
+}
+
+void Rock::setHealth(int health)
+{
+	this->health = health;
+}
+
+int Rock::getType()
+{
+	return this->type;;
 }
 
 void Rock::setType(int type)
@@ -62,8 +81,8 @@ void Rock::setType(int type)
 	this->type = type;
 }
 
-int Rock::getType()
+void Rock::ReduceHealth()
 {
-	return this->type;
+	this->health = this->health - this->reduction;
 }
 

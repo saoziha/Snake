@@ -10,11 +10,18 @@ public:
 	void Init();
 	void Update();
 
-	void setType(int type);
+	int getHealth();
+	void setHealth(int);
+
 	int getType();
-	
+	void setType(int);
+
+	void ReduceHealth();
+
 private:
-	int mMoveStep;
+	int mMoveStep;	
+	int health;
+	int reduction;
 	int type;
 };
 

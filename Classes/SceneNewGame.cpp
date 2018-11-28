@@ -88,9 +88,8 @@ bool SceneNewGame::init()
 	int typeRock;
 	for (int i = 0; i < MAX_ROCK; i++)
 	{
-		typeRock = random(1, 5);
-		Rock* rock = new Rock(this, typeRock);
-		rock->setType(typeRock);
+		typeRock = random(1, 5);		
+		Rock* rock = new Rock(this, typeRock);		
 		rock->setAlive(false);
 		mRocks.push_back(rock);
 	}
@@ -145,7 +144,7 @@ void SceneNewGame::update(float delta)
 	}
 
 	//UPDATE SCORE
-	score++;
+	//score++;
 	if (framesCount % FRAME_CALCULATE_SCORE == 0)
 	{
 		label->setString("Score: " + std::to_string(score));
@@ -168,6 +167,7 @@ void SceneNewGame::GenerateRock()
 		if (!r->isAlive())
 		{
 			r->setAlive(true);
+			r->setHealth(r->getType());
 			r->Init();
 			break;
 		}
