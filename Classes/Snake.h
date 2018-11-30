@@ -18,8 +18,7 @@ public:
 	void Colission(std::vector<Rock*> mRocks);
 	void CollisionItem(std::vector<Item*> mItems);
 	void Action();
-	
-	void Shoot();	
+	void Shoot();
 private:
 	cocos2d::Scene* mScene;
 	
