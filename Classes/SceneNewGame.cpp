@@ -4,7 +4,6 @@
 #include "Rock.h"
 #include "Snake.h"
 #include "Item.h"
-#include "ActionShake.h"
 
 USING_NS_CC;
 Snake *snake;
@@ -285,13 +284,4 @@ void SceneNewGame::TextOnScreen()
 	bulletLabel->setAlignment(cocos2d::TextHAlignment::CENTER);
 	bulletLabel->setPosition(label->getPosition() - Vec2(0,50));
 	addChild(bulletLabel);	
-}
-
-void SceneNewGame::ShakeScreen()
-{
-	float interval = 1 / 60;
-	float duration = 0.8f;
-	float speed = 6.0f;
-	float magnitude = 4.f;
-	runAction(ActionShake::create(duration, speed, magnitude));
 }

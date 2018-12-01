@@ -2,7 +2,7 @@
 #include "Define.h"
 #include "cocos2d.h"
 #include "SceneNewGame.h"
-#include "ActionShake.h"
+#include "CameraShake.h"
 
 USING_NS_CC;
 int SceneNewGame::currentBullet = INITIAL_BULLET;
@@ -104,7 +104,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 					r->ReduceHealth();
 					if (r->getHealth() == 0)
 					{
-						SceneNewGame::score += 50;
+						SceneNewGame::score += (50 * r->getType());
 						r->setAlive(false);
 					}					
 				}
@@ -114,18 +114,14 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 }
 
 void Snake::Action()
-{
-	float interval = 1 / 60;
-	float duration = 0.8f;
-	float speed = 6.0f;
-	float magnitude = 4.f;
+{	
 	auto fadeIn = FadeIn::create(0.1f);
 	auto fadeOut = FadeOut::create(0.1f);
 	auto actionFade = Repeat::create(Sequence::create(fadeOut, fadeIn, nullptr), 2);
-	auto actionShake = ActionShake::create(duration, speed, magnitude);
-	auto actionSpawn = Spawn::create(actionFade, actionShake, nullptr);
-	this->runAction(actionSpawn);
 	
+	auto Shake = CameraShake::create(0.5, 4);
+	mSprite->runAction(actionFade);
+	mScene->runAction(Shake);
 }
 
 void Snake::Shoot()

@@ -14,8 +14,7 @@ public:
 	virtual void update(float delta);
 	CREATE_FUNC(SceneNewGame);
 	void GenerateRock();
-	void GenerateBulletItem();
-	void ShakeScreen();
+	void GenerateBulletItem();	
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event);

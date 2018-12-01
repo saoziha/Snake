@@ -54,7 +54,7 @@
     <ClCompile Include="Item.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\ActionShake.cpp">
+    <ClCompile Include="..\Classes\CameraShake.cpp">
       <Filter>src\Model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,7 +98,7 @@
     <ClInclude Include="..\Classes\Item.h">
       <Filter>src\Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\ActionShake.h">
+    <ClInclude Include="..\Classes\CameraShake.h">
       <Filter>src\Model</Filter>
     </ClInclude>
   </ItemGroup>

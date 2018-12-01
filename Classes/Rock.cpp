@@ -44,8 +44,8 @@ void Rock::Init()
 
 	setPosition(Vec2(x, y));
 
-	//mMoveStep = random(ROCK_FALL_STEP_MIN, ROCK_FALL_STEP_MAX);
-	mMoveStep = 1;
+	mMoveStep = random(ROCK_FALL_STEP_MIN, ROCK_FALL_STEP_MAX);
+	//mMoveStep = 1;
 }
 
 void Rock::Update()
