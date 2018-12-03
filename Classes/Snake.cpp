@@ -3,11 +3,14 @@
 #include "cocos2d.h"
 #include "SceneNewGame.h"
 #include "CameraShake.h"
+#include "Heart.h"
 
 USING_NS_CC;
 int SceneNewGame::currentBullet = INITIAL_BULLET;
 int SceneNewGame::score;
 std::vector<Bullet*> mBullets;
+std::vector<Heart*> mHearts;
+int countHeart = 0;
 
 Snake::Snake(cocos2d::Scene * scene)
 {
@@ -40,6 +43,14 @@ void Snake::Init()
 		mBullets.push_back(b);
 		b->setAlive(false);
 	}
+
+	for (int i = 0; i < 5; i++)
+	{
+		Heart * heart = new Heart(mScene);
+		heart->addHeart(i);
+		heart->setAlive(true);
+		mHearts.push_back(heart);
+	}
 }
 
 void Snake::Update()
@@ -48,7 +59,16 @@ void Snake::Update()
 	{
 		Bullet *bullet = mBullets.at(i);
 		bullet->Update();		
-	}	
+	}		
+
+	for (int i = 0; i <mHearts.size(); i++)
+	{
+		Heart *h = mHearts.at(i);
+		if (h->isAlive())
+		{
+			h->Update();
+		}
+	}
 }
 
 void Snake::Colission(std::vector<Rock*> mRocks)
@@ -61,37 +81,27 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 		{
 			if(r->GetBound().intersectsRect(this->GetBound()))
 			{
-				if (r->getHealth() == 1)
+				if (r->getType() != 0)
 				{
 					r->setAlive(false);
 					Action();
+					shakeScreen(r->getType());
+
+					if (mHearts.size() > 0)
+					{
+						for (int k = 0; k < REMOVE_HEART_STEP; k++)
+						{
+							Heart *h = mHearts.at(mHearts.size()-1);
+							h->setId(-1);
+						}
+					}
+
+					else
+					{
+						log("Gameover");
+					}					
 					continue;
-				}
-				else if (r->getHealth() == 2)
-				{
-					r->setAlive(false);
-					Action();
-					continue;
-				}
-				else if (r->getHealth() == 3)
-				{
-					r->setAlive(false);
-					Action();
-					continue;
-				}
-				else if (r->getHealth() == 4)
-				{
-					r->setAlive(false);
-					Action();
-					continue;
-				}
-				else if (r->getHealth() == 5)
-				{
-					r->setAlive(false);
-					Action();
-					continue;
-				}
-				
+				}				
 			}
 
 			for (int j = 0; j < mBullets.size(); j++)
@@ -118,10 +128,7 @@ void Snake::Action()
 	auto fadeIn = FadeIn::create(0.1f);
 	auto fadeOut = FadeOut::create(0.1f);
 	auto actionFade = Repeat::create(Sequence::create(fadeOut, fadeIn, nullptr), 2);
-	
-	auto Shake = CameraShake::create(0.5, 4);
-	mSprite->runAction(actionFade);
-	mScene->runAction(Shake);
+	mSprite->runAction(actionFade);	
 }
 
 void Snake::Shoot()
@@ -138,7 +145,13 @@ void Snake::Shoot()
 	}		
 }
 
-void Snake::CollisionItem(std::vector<Item*> mItems)
+void Snake::shakeScreen(int level)
+{
+	auto shake = CameraShake::create(0.4, level);
+	mScene->runAction(shake);
+}
+
+void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartItems)
 {
 	for (int i = 0; i < mItems.size(); i++)
 	{
@@ -148,8 +161,8 @@ void Snake::CollisionItem(std::vector<Item*> mItems)
 			if (item->GetBound().intersectsRect(this->GetBound()))
 			{
 				item->setAlive(false);				
-				SceneNewGame::currentBullet+=5;	
-				for (int i = 0; i < 5; i++)
+				SceneNewGame::currentBullet += ADD_BULLET_STEP;
+				for (int i = 0; i < ADD_BULLET_STEP; i++)
 				{
 					Bullet *b = new Bullet(mScene);
 					b->setAlive(false);
@@ -158,6 +171,23 @@ void Snake::CollisionItem(std::vector<Item*> mItems)
 				break;;
 			}
 		}
-	}		
+	}
+
+	for (int i = 0; i < mHeartItems.size(); i++)
+	{
+		Heart *heart = mHeartItems.at(i);
+		if (heart->isAlive())
+		{
+			if (heart->GetBound().intersectsRect(this->GetBound()))
+			{
+				heart->setAlive(false);				
+				Heart *h = new Heart(mScene);
+				h->setAlive(true);
+				h->addHeart(mHearts.size());
+				mHearts.push_back(h);
+				break;
+			}
+		}
+	}
 }
 

@@ -151,6 +151,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClCompile Include="..\Classes\AppDelegate.cpp" />
     <ClCompile Include="..\Classes\Bullet.cpp" />
     <ClCompile Include="..\Classes\CameraShake.cpp" />
+    <ClCompile Include="..\Classes\Heart.cpp" />
     <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="..\Classes\MenuScreen.cpp" />
     <ClCompile Include="..\Classes\Model.cpp" />
@@ -167,6 +168,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Bullet.h" />
     <ClInclude Include="..\Classes\CameraShake.h" />
     <ClInclude Include="..\Classes\Define.h" />
+    <ClInclude Include="..\Classes\Heart.h" />
     <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\Item.h" />
     <ClInclude Include="..\Classes\MenuScreen.h" />

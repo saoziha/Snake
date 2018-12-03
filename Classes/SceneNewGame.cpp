@@ -4,6 +4,7 @@
 #include "Rock.h"
 #include "Snake.h"
 #include "Item.h"
+#include "Heart.h"
 
 USING_NS_CC;
 Snake *snake;
@@ -94,11 +95,18 @@ bool SceneNewGame::init()
 		mRocks.push_back(rock);
 	}
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < MAX_BULLET; i++)
 	{		
 		Item* item_bullet = new Item(this);		
 		item_bullet->setAlive(false);
 		bulletItems.push_back(item_bullet);
+	}	
+
+	for (int i = 0; i < 10; i++)
+	{
+		Heart* heart = new Heart(this);
+		heart->setAlive(false);
+		gHearts.push_back(heart);
 	}
 
 	scheduleUpdate();
@@ -121,6 +129,7 @@ void SceneNewGame::update(float delta)
 	{
 		GenerateRock();
 		GenerateBulletItem();
+		GenerateHeartItem();
 	}
 
 	//update rock
@@ -143,8 +152,18 @@ void SceneNewGame::update(float delta)
 		}
 	}
 
+	//Update Heart item
+	for (int i = 0; i < gHearts.size(); i++)
+	{
+		Heart *h = gHearts.at(i);
+		if (h->isAlive())
+		{
+			h->Update();
+		}
+	}
+
 	//UPDATE SCORE
-	//score++;
+	score++;
 	if (framesCount % FRAME_CALCULATE_SCORE == 0)
 	{
 		label->setString("Score: " + std::to_string(score));
@@ -156,7 +175,7 @@ void SceneNewGame::update(float delta)
 
 	//UPDATE COLISSION
 	snake->Colission(mRocks);
-	snake->CollisionItem(bulletItems);
+	snake->CollisionItem(bulletItems, gHearts);
 }
 
 void SceneNewGame::GenerateRock()
@@ -183,6 +202,20 @@ void SceneNewGame::GenerateBulletItem()
 		{
 			item_bullet->setAlive(true);
 			item_bullet->Init();
+			break;
+		}
+	}
+}
+
+void SceneNewGame::GenerateHeartItem()
+{
+	for (int i = 0; i < gHearts.size(); i++)
+	{
+		Heart *heart = gHearts.at(i);
+		if (!heart->isAlive())
+		{
+			heart->setAlive(true);
+			heart->Init();
 			break;
 		}
 	}
@@ -215,12 +248,10 @@ void SceneNewGame::onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2
 }
 
 bool SceneNewGame::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event)
-{
-	
+{	
 	initialTouchPos0 = touch->getLocation().x;	
 	currentTouchPos0 = touch->getLocation().x;
-	isTouchDown = true;
-	//ShakeScreen();
+	isTouchDown = true;	
 	return true;
 }
 
@@ -232,31 +263,19 @@ void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 
 void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
 {
-
 	if (true == isTouchDown)
 	{
-		if (initialTouchPos0 - currentTouchPos0 > 0)
+		if (initialTouchPos0 - currentTouchPos0 > 0 || initialTouchPos0 < SCREEN_HALF)
 		{
 			//CCLOG("SWIPED LEFT");
 			xMovement = -1;
 		}
 
-		else if (initialTouchPos0 - currentTouchPos0 < 0)
+		else if (initialTouchPos0 - currentTouchPos0 < 0 || initialTouchPos0 > SCREEN_HALF)
 		{
 			//CCLOG("SWIPED RIGHT");
 			xMovement = 1;
-		}
-
-		else if (initialTouchPos0 < SCREEN_HALF)
-		{
-			xMovement = -1;
-		}
-
-		else if (initialTouchPos0 > SCREEN_HALF)
-		{
-			xMovement = 1;
-		}
-
+		}	
 			newPosX = snake->GetPosistion().x + STEP *xMovement;
 			if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
 			{
