@@ -34,6 +34,7 @@ void Heart::Update()
 	{
 		if ((*i)->getId() == -1)
 		{
+			(*i)->setAlive(false);
 			i = Snake::mHearts.erase(i);
 		}
 		else

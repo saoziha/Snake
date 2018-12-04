@@ -92,8 +92,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 						for (int k = 0; k < REMOVE_HEART_STEP; k++)
 						{
 							Heart *h = mHearts.at(mHearts.size()-1);							
-							h->setId(-1);
-							h->setShow(false);
+							h->setId(-1);							
 						}
 					}
 
