@@ -10,10 +10,13 @@ public:
 	void Init();
 	int getId();
 	void setId(int);
-
 	void addHeart(int);
+
+	void setShow(bool isShow);
+	bool isShow();
 private:	
 	int id;
 	int mMoveStep;
+	bool mIsShow;
 };
 

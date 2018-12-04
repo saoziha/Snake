@@ -27,21 +27,21 @@ void Heart::Update()
 		{
 			setAlive(false);
 		}
-	}
+	}	
 
 	std::vector<Heart*>::iterator i = Snake::mHearts.begin();
 	while (i != Snake::mHearts.end())
 	{
 		if ((*i)->getId() == -1)
 		{
-			(*i)->setAlive(false);
 			i = Snake::mHearts.erase(i);
 		}
 		else
 		{
 			i++;
 		}
-	}	
+	}
+	
 }
 
 void Heart::Init()
@@ -72,6 +72,18 @@ void Heart::addHeart(int i)
 	int x = HEART_LOCATION_X + HEART_LOCATION_X * 2 * i;
 	int y = HEART_LOCATION_Y;
 
+	this->setShow(true);
 	setPosition(Vec2(x, y));
+}
+
+void Heart::setShow(bool isShow)
+{
+	this->mIsShow = isShow;
+	mSprite->setVisible(mIsShow);
+}
+
+bool Heart::isShow()
+{
+	return this->mIsShow;
 }
 

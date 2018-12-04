@@ -7,6 +7,8 @@
 #include "Heart.h"
 
 USING_NS_CC;
+static  SceneNewGame* sController = nullptr;
+
 Snake *snake;
 float xMovement = 0;
 int framesCount;
@@ -14,18 +16,24 @@ float newPosX = 0;
 int score;
 Label *label;
 Label *bulletLabel;
-
 int currentBullet = INITIAL_BULLET;
-
 bool isTouchDown;
-
 float initialTouchPos0;
 float currentTouchPos0;
 
 
-Scene* SceneNewGame::createScene()
+SceneNewGame* SceneNewGame::createScene()
 {
-	return SceneNewGame::create();
+	if (!sController)
+	{
+		sController = new SceneNewGame();
+		sController->init();
+	}
+	return sController;
+}
+
+SceneNewGame::SceneNewGame()
+{
 }
 
 bool SceneNewGame::init()
@@ -37,11 +45,13 @@ bool SceneNewGame::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto screenSize = Director::getInstance()->getVisibleSize();
 	framesCount = 0;
+	score = 0;
 
 	// Add button back
 	auto closeItem1 = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		[](Ref *event) {
-		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));
+		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));
+		Director::getInstance()->pause();
 	});
 	closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
@@ -76,7 +86,7 @@ bool SceneNewGame::init()
 	listener->onKeyReleased = CC_CALLBACK_2(SceneNewGame::onKeyReleased, this);
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);*/
 
-
+	/*Touch Listener*/
 	auto listenerTouch = EventListenerTouchOneByOne::create();
 	listenerTouch->onTouchBegan = CC_CALLBACK_2(SceneNewGame::onTouchBegan, this);
 	listenerTouch->onTouchMoved = CC_CALLBACK_2(SceneNewGame::onTouchMoved, this);
@@ -102,7 +112,7 @@ bool SceneNewGame::init()
 		bulletItems.push_back(item_bullet);
 	}	
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		Heart* heart = new Heart(this);
 		heart->setAlive(false);
@@ -118,17 +128,22 @@ void SceneNewGame::update(float delta)
 	framesCount++;
 	snake->Update();	
 	// KEY ARROWS
-	/*	newPosX = snake->GetPosistion().x + STEP *xMovement;
-	if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
-	{
-		snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
-	}*/
+	//newPosX = snake->GetPosistion().x + STEP *xMovement;
+	//if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
+	//{
+	//	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
+	//}
 
 	//generating rock
 	if (framesCount % ROCK_GENERATING_STEP == 0)
 	{
 		GenerateRock();
-		GenerateBulletItem();
+		GenerateBulletItem();		
+	}
+
+	//generating heart
+	if (framesCount % HEART_GENERATING_STEP == 0)
+	{
 		GenerateHeartItem();
 	}
 
@@ -303,4 +318,8 @@ void SceneNewGame::TextOnScreen()
 	bulletLabel->setAlignment(cocos2d::TextHAlignment::CENTER);
 	bulletLabel->setPosition(label->getPosition() - Vec2(0,50));
 	addChild(bulletLabel);	
+}
+
+SceneNewGame::~SceneNewGame()
+{
 }

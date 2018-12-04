@@ -7,7 +7,7 @@
 class SceneNewGame : public cocos2d::Scene
 {
 public:
-	static cocos2d::Scene* createScene();	
+	static SceneNewGame* createScene();	
 	static int currentBullet;
 	static int score;
 	static int heart;	
@@ -27,11 +27,13 @@ public:
 	virtual void onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event *event);
 
 	void TextOnScreen();
-
+	virtual ~SceneNewGame();
 private:
 	std::vector<Rock*> mRocks;
 	std::vector<Item*> bulletItems;
 	std::vector<Heart*> gHearts;
+	SceneNewGame();
+	//static SceneNewGame *sController;
 };
 
 

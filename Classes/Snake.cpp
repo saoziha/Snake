@@ -4,6 +4,7 @@
 #include "SceneNewGame.h"
 #include "CameraShake.h"
 #include "Heart.h"
+#include "GameOverScene.h"
 
 USING_NS_CC;
 int SceneNewGame::currentBullet = INITIAL_BULLET;
@@ -44,11 +45,10 @@ void Snake::Init()
 		b->setAlive(false);
 	}
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < INITIAL_HEART; i++)
 	{
 		Heart * heart = new Heart(mScene);
-		heart->addHeart(i);
-		heart->setAlive(true);
+		heart->addHeart(i);			
 		mHearts.push_back(heart);
 	}
 }
@@ -64,7 +64,7 @@ void Snake::Update()
 	for (int i = 0; i <mHearts.size(); i++)
 	{
 		Heart *h = mHearts.at(i);
-		if (h->isAlive())
+		if (h->isAlive() || h->isShow())
 		{
 			h->Update();
 		}
@@ -91,14 +91,17 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 					{
 						for (int k = 0; k < REMOVE_HEART_STEP; k++)
 						{
-							Heart *h = mHearts.at(mHearts.size()-1);
+							Heart *h = mHearts.at(mHearts.size()-1);							
 							h->setId(-1);
+							h->setShow(false);
 						}
 					}
 
 					else
 					{
-						log("Gameover");
+						auto gameOverScene = GameOverScene::create(); 						
+						gameOverScene->getLayer()->getLabel()->setString("Score is: " + std::to_string(SceneNewGame::score));
+						Director::getInstance()->replaceScene(gameOverScene);							
 					}					
 					continue;
 				}				
@@ -114,7 +117,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 					r->ReduceHealth();
 					if (r->getHealth() == 0)
 					{
-						SceneNewGame::score += (50 * r->getType());
+						SceneNewGame::score += (BASE_SCORE * r->getType());
 						r->setAlive(false);
 					}					
 				}
@@ -181,9 +184,8 @@ void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartI
 			if (heart->GetBound().intersectsRect(this->GetBound()))
 			{
 				heart->setAlive(false);				
-				Heart *h = new Heart(mScene);
-				h->setAlive(true);
-				h->addHeart(mHearts.size());
+				Heart *h = new Heart(mScene);				
+				h->addHeart(mHearts.size());				
 				mHearts.push_back(h);
 				break;
 			}
