@@ -7,7 +7,6 @@
 #include "Heart.h"
 
 USING_NS_CC;
-static  SceneNewGame* sController = nullptr;
 
 Snake *snake;
 float xMovement = 0;
@@ -21,9 +20,9 @@ bool isTouchDown;
 float initialTouchPos0;
 float currentTouchPos0;
 
-
 SceneNewGame* SceneNewGame::createScene()
-{
+{	
+	SceneNewGame* sController = nullptr;
 	if (!sController)
 	{
 		sController = new SceneNewGame();
@@ -45,7 +44,8 @@ bool SceneNewGame::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	auto screenSize = Director::getInstance()->getVisibleSize();
 	framesCount = 0;
-	score = 0;
+	score = 0;	
+	
 
 	// Add button back
 	auto closeItem1 = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
@@ -79,7 +79,7 @@ bool SceneNewGame::init()
 
 	snake = new Snake(this);
 	snake->Init();
-
+	currentBullet = Snake::mBullets.size();
 	/*KeyBoard listener*/
 	/*auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = CC_CALLBACK_2(SceneNewGame::onKeyPressed, this);
@@ -118,7 +118,7 @@ bool SceneNewGame::init()
 		heart->setAlive(false);
 		gHearts.push_back(heart);
 	}
-
+	
 	scheduleUpdate();
 	return true;
 }
@@ -322,4 +322,5 @@ void SceneNewGame::TextOnScreen()
 
 SceneNewGame::~SceneNewGame()
 {
+	delete snake;
 }

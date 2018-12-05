@@ -5,6 +5,7 @@
 #include "CameraShake.h"
 #include "Heart.h"
 #include "GameOverScene.h"
+#include <algorithm>
 
 USING_NS_CC;
 int SceneNewGame::currentBullet = INITIAL_BULLET;
@@ -31,18 +32,21 @@ Snake::Snake(cocos2d::Scene * scene)
 }
 
 Snake::~Snake()
-{
+{	
 }
 
 void Snake::Init()
 {
 	setPosition(Vec2(SCREEN_W / 2, SNAKE_Y_POSITION));
-
+	if (mBullets.size() > 0)
+	{
+		DeleteBullets();
+	}
 	for (int i = 0; i < INITIAL_BULLET; i++)
 	{
 		Bullet *b = new Bullet(mScene);
 		mBullets.push_back(b);
-		b->setAlive(false);
+		//b->setAlive(false);
 	}
 
 	for (int i = 0; i < INITIAL_HEART; i++)
@@ -100,7 +104,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 					{
 						auto gameOverScene = GameOverScene::create(); 						
 						gameOverScene->getLayer()->getLabel()->setString("Score is: " + std::to_string(SceneNewGame::score));
-						Director::getInstance()->replaceScene(gameOverScene);							
+						Director::sharedDirector()->replaceScene(gameOverScene);						
 					}					
 					continue;
 				}				
@@ -145,6 +149,17 @@ void Snake::Shoot()
 			break;
 		}				
 	}		
+}
+
+void Snake::DeleteBullets()
+{
+	for (int i = 0; i < mBullets.size(); i++)
+	{
+		Bullet * b = mBullets.at(i);
+		delete b;
+		mBullets.erase(mBullets.begin() + i);
+	}
+	mBullets.clear();
 }
 
 void Snake::shakeScreen(int level)

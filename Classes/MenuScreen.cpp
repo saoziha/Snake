@@ -35,9 +35,8 @@ bool MenuScreen::init()
 	addChild(gameover);
 
 	//Menu String
-	auto newGame = MenuItemFont::create("New Game", [](Ref *event) {
-		Scene *c = SceneNewGame::createScene();
-		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5,c));
+	auto newGame = MenuItemFont::create("New Game", [](Ref *event) {		
+		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
 	});
 	auto options = MenuItemFont::create("Options", [](Ref *event) {
 		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneOption::createScene()));

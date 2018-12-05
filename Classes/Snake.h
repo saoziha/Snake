@@ -22,7 +22,7 @@ public:
 	void CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartItems);
 	void Action();
 	void Shoot();
-
+	void DeleteBullets();
 	void shakeScreen(int);
 private:
 	cocos2d::Scene* mScene;	
