@@ -22,9 +22,11 @@ bool MenuScreen::init()
 
 	auto screenSize = Director::getInstance()->getVisibleSize();
 
-	/*auto logo = Sprite::create("HelloWorld.png");
-	logo->setPosition(screenSize / 2);	
-	addChild(logo);*/
+	//background
+	auto sprite = Sprite::create(IMG_BACKGROUND);
+	sprite->setPosition(screenSize / 2);
+	this->addChild(sprite, 0);
+
 
 	gameover = Label::createWithTTF("Menu", "fonts/Marker Felt.ttf ", 50);
 	gameover->setPosition(Vec2(screenSize.width / 2, screenSize.height - 100));

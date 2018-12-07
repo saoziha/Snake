@@ -13,6 +13,8 @@
 #define IMG_ROCK5 "Obstaclelv5.png"
 #define IMG_BULLET_ITEM "Bulletitem.png"
 #define IMG_HEART_ITEM "life.png"
+#define IMG_SHOOT_BTN "ShootButton.png"
+#define IMG_BACKGROUND "background.png"
 
 #define ROCK_FALL_STEP_MIN 5
 #define ROCK_FALL_STEP_MAX 10
