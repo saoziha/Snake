@@ -46,7 +46,6 @@ bool SceneNewGame::init()
 	framesCount = 0;
 	score = 0;	
 	
-
 	// Add button back
 	auto closeItem1 = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		[](Ref *event) {
@@ -55,7 +54,7 @@ bool SceneNewGame::init()
 	});
 	closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
-	auto shootButton = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
+	auto shootButton = MenuItemImage::create(IMG_SHOOT_BTN, IMG_SHOOT_BTN,
 		[](Ref *event) {
 		snake->Shoot();		
 		if (currentBullet > 0)
