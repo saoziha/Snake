@@ -47,7 +47,7 @@ bool MenuScreen::init()
 	});
 
 	auto quit = MenuItemFont::create("Quit", [](Ref *event) {
-		gameover->setString("Quit Clicked");
+		CCDirector::sharedDirector()->end();
 	});
 
 	newGame->setPosition(screenSize.width / 2, screenSize.height - 200);
