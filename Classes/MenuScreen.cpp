@@ -40,9 +40,9 @@ bool MenuScreen::init()
 	auto newGame = MenuItemFont::create("New Game", [](Ref *event) {		
 		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
 	});
-	auto options = MenuItemFont::create("Options", [](Ref *event) {
+	/*auto options = MenuItemFont::create("Options", [](Ref *event) {
 		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneOption::createScene()));
-	});
+	});*/
 
 	auto about = MenuItemFont::create("About", [](Ref *event) {
 		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneAbout::createScene()));
@@ -53,11 +53,11 @@ bool MenuScreen::init()
 	});
 
 	newGame->setPosition(screenSize.width / 2, screenSize.height - 200);
-	options->setPosition(newGame->getPosition() - Vec2(0, 50));
-	about->setPosition(options->getPosition() - Vec2(0, 50));
+	//options->setPosition(newGame->getPosition() - Vec2(0, 50));
+	about->setPosition(newGame->getPosition() - Vec2(0, 50));
 	quit->setPosition(about->getPosition() - Vec2(0, 50));
 
-	auto menuString = Menu::create(newGame, options, about,quit, nullptr);
+	auto menuString = Menu::create(newGame, about,quit, nullptr);
 	menuString->setPosition(Vec2::ZERO);
 	addChild(menuString);
 	return true;
