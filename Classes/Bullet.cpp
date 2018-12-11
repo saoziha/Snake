@@ -49,8 +49,7 @@ void Bullet::Update()
 	{
 		if ((*i)->getId() == -1)
 		{
-			i = Snake::mBullets.erase(i);
-			log("BUllet %d", Snake::mBullets.size());
+			i = Snake::mBullets.erase(i);			
 		}
 		else
 		{

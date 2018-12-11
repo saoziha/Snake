@@ -49,8 +49,7 @@ bool SceneNewGame::init()
 	// Add button back
 	auto closeItem1 = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
 		[](Ref *event) {
-		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));
-		Director::getInstance()->pause();
+		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));		
 	});
 	closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
