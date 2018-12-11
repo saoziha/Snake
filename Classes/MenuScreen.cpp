@@ -5,8 +5,7 @@
 #include "Snake.h"
 
 USING_NS_CC;
-Sprite *coin;
-Label *gameover;
+
 
 Scene* MenuScreen::createScene()
 {
@@ -27,14 +26,6 @@ bool MenuScreen::init()
 	sprite->setPosition(screenSize / 2);
 	this->addChild(sprite, 0);
 
-
-	gameover = Label::createWithTTF("Menu", "fonts/Marker Felt.ttf ", 50);
-	gameover->setPosition(Vec2(screenSize.width / 2, screenSize.height - 100));
-	gameover->enableBold();
-	gameover->setColor(Color3B::RED);
-	gameover->enableOutline(Color4B::GREEN, 2);
-	gameover->enableShadow();
-	addChild(gameover);
 
 	//Menu String
 	auto newGame = MenuItemFont::create("New Game", [](Ref *event) {		
