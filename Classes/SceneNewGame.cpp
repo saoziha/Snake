@@ -5,6 +5,8 @@
 #include "Snake.h"
 #include "Item.h"
 #include "Heart.h"
+#include "ui/CocosGUI.h"
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 
@@ -19,6 +21,8 @@ int currentBullet = INITIAL_BULLET;
 bool isTouchDown;
 float initialTouchPos0;
 float currentTouchPos0;
+Sprite * btnPauseGame;
+bool isPausedGame = false;
 
 SceneNewGame* SceneNewGame::createScene()
 {	
@@ -47,29 +51,65 @@ bool SceneNewGame::init()
 	score = 0;	
 		
 	// Add button back
-	auto closeItem1 = MenuItemImage::create(IMG_PAUSE_BTN, IMG_PLAY_BTN,
-		[](Ref *event) {
-		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));	
-		Director::getInstance()->pause();
+	//auto closeItem1 = MenuItemImage::create(IMG_PAUSE_BTN, IMG_PLAY_BTN,
+	//	[](Ref *event) {
+	//	//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));	
+	//	Director::getInstance()->pause();
+	//});
+	//closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
+
+	auto buttonCreatePauseGame = ui::Button::create("Pause.png", "Pause.png", "Pause.png");
+	btnPauseGame = Sprite::create("Pause.png");
+	buttonCreatePauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, visibleSize.height - buttonCreatePauseGame->getContentSize().height / 2));
+
+	buttonCreatePauseGame->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			isPausedGame = !isPausedGame;
+			if (isPausedGame)
+			{
+				btnPauseGame->setTexture("Play.png");
+				Director::getInstance()->pause();
+				//CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);
+			}
+			else
+			{
+				btnPauseGame->setTexture("Pause.png");
+				Director::getInstance()->resume();
+				//CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+			}
+			break;
+
+		default:
+			break;
+		}
 	});
-	closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
 	auto shootButton = MenuItemImage::create(IMG_SHOOT_BTN, IMG_SHOOT_BTN,
 		[](Ref *event) {
-		snake->Shoot();		
-		if (currentBullet > 0)
+
+		if (!isPausedGame)
 		{
-			currentBullet--;
-		}
-		else
-		{
-			currentBullet = 0;
-		}		
+			snake->Shoot();
+			if (currentBullet > 0)
+			{
+				currentBullet--;
+			}
+			else
+			{
+				currentBullet = 0;
+			}
+		}			
 	});
 	
-	shootButton->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, SNAKE_Y_POSITION);
-	
-	auto menuImage = Menu::create(closeItem1, shootButton, nullptr);
+	shootButton->setPosition(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, SNAKE_Y_POSITION);	
+
+	this->addChild(btnPauseGame, 1);
+	this->addChild(buttonCreatePauseGame, 0);
+	auto menuImage = Menu::create( shootButton, nullptr);
 	menuImage->setPosition(Vec2::ZERO);
 	addChild(menuImage);
 
@@ -79,6 +119,7 @@ bool SceneNewGame::init()
 	snake = new Snake(this);
 	snake->Init();
 	currentBullet = Snake::mBullets.size();
+
 	/*KeyBoard listener*/
 	/*auto listener = EventListenerKeyboard::create();
 	listener->onKeyPressed = CC_CALLBACK_2(SceneNewGame::onKeyPressed, this);
@@ -124,72 +165,76 @@ bool SceneNewGame::init()
 
 void SceneNewGame::update(float delta)
 {
-	framesCount++;
-	snake->Update();	
-	// KEY ARROWS
-	//newPosX = snake->GetPosistion().x + STEP *xMovement;
-	//if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
-	//{
-	//	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
-	//}
-
-	//generating rock
-	if (framesCount % ROCK_GENERATING_STEP == 0)
+	if (!isPausedGame)
 	{
-		GenerateRock();
-		GenerateBulletItem();		
-	}
+		framesCount++;
+		snake->Update();
 
-	//generating heart
-	if (framesCount % HEART_GENERATING_STEP == 0)
-	{
-		GenerateHeartItem();
-	}
+		// KEY ARROWS
+		//newPosX = snake->GetPosistion().x + STEP *xMovement;
+		//if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
+		//{
+		//	snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
+		//}
 
-	//update rock
-	for (int i = 0; i < mRocks.size(); i++)
-	{
-		Rock *r = mRocks.at(i);
-		if (r->isAlive())
+		//generating rock
+		if (framesCount % ROCK_GENERATING_STEP == 0)
 		{
-			r->Update();
+			GenerateRock();
+			GenerateBulletItem();
 		}
-	}
 
-	//update bullet item
-	for (int i = 0; i < bulletItems.size(); i++)
-	{
-		Item *item = bulletItems.at(i);
-		if (item->isAlive())
+		//generating heart
+		if (framesCount % HEART_GENERATING_STEP == 0)
 		{
-			item->Update();
+			GenerateHeartItem();
 		}
-	}
 
-	//Update Heart item
-	for (int i = 0; i < gHearts.size(); i++)
-	{
-		Heart *h = gHearts.at(i);
-		if (h->isAlive())
+		//update rock
+		for (int i = 0; i < mRocks.size(); i++)
 		{
-			h->Update();
+			Rock *r = mRocks.at(i);
+			if (r->isAlive())
+			{
+				r->Update();
+			}
 		}
-	}
 
-	//UPDATE SCORE
-	score++;
-	if (framesCount % FRAME_CALCULATE_SCORE == 0)
-	{
-		label->setString("Score: " + std::to_string(score));
-	}
+		//update bullet item
+		for (int i = 0; i < bulletItems.size(); i++)
+		{
+			Item *item = bulletItems.at(i);
+			if (item->isAlive())
+			{
+				item->Update();
+			}
+		}
 
-	//Update bullet number		
-	bulletLabel->setString("Bullets: " + std::to_string(currentBullet));
-		
+		//Update Heart item
+		for (int i = 0; i < gHearts.size(); i++)
+		{
+			Heart *h = gHearts.at(i);
+			if (h->isAlive())
+			{
+				h->Update();
+			}
+		}
 
-	//UPDATE COLISSION
-	snake->Colission(mRocks);
-	snake->CollisionItem(bulletItems, gHearts);
+		//UPDATE SCORE
+		score++;
+		if (framesCount % FRAME_CALCULATE_SCORE == 0)
+		{
+			label->setString("Score: " + std::to_string(score));
+		}
+
+		//Update bullet number		
+		bulletLabel->setString("Bullets: " + std::to_string(currentBullet));
+
+
+		//UPDATE COLISSION
+		snake->Colission(mRocks);
+		snake->CollisionItem(bulletItems, gHearts);
+	}	
 }
 
 void SceneNewGame::GenerateRock()
@@ -277,36 +322,43 @@ void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 
 void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
 {
-	if (true == isTouchDown)
-	{
-		if (initialTouchPos0 - currentTouchPos0 > 0 )
+	if (!isPausedGame)
+	{	
+		if (true == isTouchDown)
 		{
-			//CCLOG("SWIPED LEFT");
-			xMovement = -1;
-		}
-
-		else if (initialTouchPos0 < SCREEN_HALF)
-		{
-			xMovement = -1;
-		}
-
-		else if (initialTouchPos0 - currentTouchPos0 < 0  )
-		{
-			//CCLOG("SWIPED RIGHT");
-			xMovement = 1;
-		}	
-
-		else if (initialTouchPos0 > SCREEN_HALF)
-		{
-			xMovement = 1;
-		}
-
-			newPosX = snake->GetPosistion().x + STEP *xMovement;
-			if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
+			if (initialTouchPos0 - currentTouchPos0 > 0 )
 			{
-				snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
+				//CCLOG("SWIPED LEFT");
+				xMovement = -1;
+				
 			}
-			isTouchDown = false;
+
+			else if (initialTouchPos0 < SCREEN_HALF)
+			{
+				xMovement = -1;
+				//isTouchDown = false;
+			}
+
+			else if (initialTouchPos0 - currentTouchPos0 < 0 )
+			{
+				//CCLOG("SWIPED RIGHT");
+				xMovement = 1;
+				//isTouchDown = false;
+			}	
+
+			else if (initialTouchPos0 > SCREEN_HALF)
+			{
+				xMovement = 1;
+				//isTouchDown = false;
+			}
+		
+				newPosX = snake->GetPosistion().x + STEP *xMovement;
+				if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
+				{
+					snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));					
+				}
+				isTouchDown = false;
+		}		
 	}
 }
 
