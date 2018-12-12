@@ -16,6 +16,7 @@ std::vector<Heart*> mHearts;
 int countHeart = 0;
 auto effectShoot = CocosDenshion::SimpleAudioEngine::getInstance();
 auto effectExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
+auto effectItem = CocosDenshion::SimpleAudioEngine::getInstance();
 
 Snake::Snake(cocos2d::Scene * scene)
 {
@@ -186,7 +187,8 @@ void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartI
 		{
 			if (item->GetBound().intersectsRect(this->GetBound()))
 			{
-				item->setAlive(false);				
+				item->setAlive(false);	
+				effectItem->playEffect("ItemSound.mp3", false, 0.5f, 0.5f, 0.5f);
 				SceneNewGame::currentBullet += ADD_BULLET_STEP;
 				for (int i = 0; i < ADD_BULLET_STEP; i++)
 				{
@@ -194,7 +196,7 @@ void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartI
 					b->setAlive(false);
 					mBullets.push_back(b);
 				}
-				break;;
+				break;
 			}
 		}
 	}
@@ -206,7 +208,8 @@ void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartI
 		{
 			if (heart->GetBound().intersectsRect(this->GetBound()))
 			{
-				heart->setAlive(false);				
+				heart->setAlive(false);		
+				effectItem->playEffect("ItemSound.mp3", false, 0.5f, 0.5f, 0.5f);
 				Heart *h = new Heart(mScene);				
 				h->addHeart(mHearts.size());				
 				mHearts.push_back(h);
