@@ -45,11 +45,12 @@ bool SceneNewGame::init()
 	auto screenSize = Director::getInstance()->getVisibleSize();
 	framesCount = 0;
 	score = 0;	
-	
+		
 	// Add button back
-	auto closeItem1 = MenuItemImage::create("CloseNormal.png", "CloseSelected.png",
+	auto closeItem1 = MenuItemImage::create(IMG_PAUSE_BTN, IMG_PLAY_BTN,
 		[](Ref *event) {
-		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));		
+		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));	
+		Director::getInstance()->pause();
 	});
 	closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
@@ -278,17 +279,28 @@ void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
 {
 	if (true == isTouchDown)
 	{
-		if (initialTouchPos0 - currentTouchPos0 > 0 || initialTouchPos0 < SCREEN_HALF)
+		if (initialTouchPos0 - currentTouchPos0 > 0 )
 		{
 			//CCLOG("SWIPED LEFT");
 			xMovement = -1;
 		}
 
-		else if (initialTouchPos0 - currentTouchPos0 < 0 || initialTouchPos0 > SCREEN_HALF)
+		else if (initialTouchPos0 < SCREEN_HALF)
+		{
+			xMovement = -1;
+		}
+
+		else if (initialTouchPos0 - currentTouchPos0 < 0  )
 		{
 			//CCLOG("SWIPED RIGHT");
 			xMovement = 1;
 		}	
+
+		else if (initialTouchPos0 > SCREEN_HALF)
+		{
+			xMovement = 1;
+		}
+
 			newPosX = snake->GetPosistion().x + STEP *xMovement;
 			if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
 			{
@@ -305,17 +317,17 @@ void SceneNewGame::onTouchCancelled(cocos2d::Touch * touch, cocos2d::Event * eve
 
 void SceneNewGame::TextOnScreen()
 {
-	label = Label::createWithTTF("Score: 0", "fonts/Marker Felt.ttf ", 30);
+	label = Label::createWithTTF("Score: 0", "fonts/Marker-Felt.ttf", 30);
 	label->setColor(Color3B::RED);
 	label->setAlignment(cocos2d::TextHAlignment::CENTER);
 	label->setPosition(Vec2(SCORE_X, SCORE_Y));
 	addChild(label);
 
-	bulletLabel = Label::createWithTTF("Bullet: 5", "fonts/Marker Felt.ttf ", 30);
+	bulletLabel = Label::createWithTTF("Bullet: 5", "fonts/Marker-Felt.ttf", 30);
 	bulletLabel->setColor(Color3B::RED);
 	bulletLabel->setAlignment(cocos2d::TextHAlignment::CENTER);
 	bulletLabel->setPosition(label->getPosition() - Vec2(0,50));
-	addChild(bulletLabel);	
+	addChild(bulletLabel);
 }
 
 SceneNewGame::~SceneNewGame()

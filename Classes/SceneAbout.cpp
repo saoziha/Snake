@@ -18,9 +18,9 @@ bool SceneAbout::init()
 	}
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 
-	design = Label::createWithTTF("          Design \n Ho Huynh Minh Hieu", "fonts/Marker Felt.ttf ", 30);
+	design = Label::createWithTTF("          Design \n Ho Huynh Minh Hieu","fonts/Marker-Felt.ttf", 30);
 	design->setPosition(Vec2(visibleSize.width / 2, visibleSize.height + 200));
-	coder = Label::createWithTTF("         Coder \n Duong Duc Hung \n Tran Viet Thanh", "fonts/Marker Felt.ttf ", 30);
+	coder = Label::createWithTTF("         Coder \n Duong Duc Hung \n Tran Viet Thanh","fonts/Marker-Felt.ttf", 30);
 	coder->setPosition(Vec2(visibleSize.width / 2, visibleSize.height + 100));
 	addChild(design);
 	addChild(coder);

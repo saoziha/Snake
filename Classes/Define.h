@@ -15,6 +15,8 @@
 #define IMG_HEART_ITEM "life.png"
 #define IMG_SHOOT_BTN "ShootButton.png"
 #define IMG_BACKGROUND "background.png"
+#define IMG_PAUSE_BTN "Pause.png"
+#define IMG_PLAY_BTN "Play.png"
 
 #define ROCK_FALL_STEP_MIN 5
 #define ROCK_FALL_STEP_MAX 10
@@ -50,7 +52,7 @@
 #define SCREEN_HALF SCREEN_W/2
 
 #define REMOVE_HEART_STEP 1
-#define HEART_LOCATION_X 20
+#define HEART_LOCATION_X 25
 #define HEART_LOCATION_Y 750
 
 #define ADD_BULLET_STEP 5

@@ -19,9 +19,9 @@ Snake::Snake(cocos2d::Scene * scene)
 	mScene = scene;
 	
 	Vector<SpriteFrame*> frames;
-	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 72, 128)));
-	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 72, 128)));
-	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 72, 128)));
+	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 22, 114)));
+	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 22, 114)));
+	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 22, 114)));
 
 	auto animation = Animation::createWithSpriteFrames(frames, 0.1f);
 	auto animate = Animate::create(animation);
