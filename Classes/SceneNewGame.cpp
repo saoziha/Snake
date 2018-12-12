@@ -45,77 +45,22 @@ bool SceneNewGame::init()
 	{
 		return false;
 	}
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	auto screenSize = Director::getInstance()->getVisibleSize();
+	
+	//Default index
 	framesCount = 0;
 	score = 0;	
-		
-	// Add button back
-	//auto closeItem1 = MenuItemImage::create(IMG_PAUSE_BTN, IMG_PLAY_BTN,
-	//	[](Ref *event) {
-	//	//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));	
-	//	Director::getInstance()->pause();
-	//});
-	//closeItem1->setPosition(visibleSize.width - closeItem1->getContentSize().width / 2, visibleSize.height - closeItem1->getContentSize().height / 2);
 
-	auto buttonCreatePauseGame = ui::Button::create("Pause.png", "Pause.png", "Pause.png");
-	btnPauseGame = Sprite::create("Pause.png");
-	buttonCreatePauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, visibleSize.height - buttonCreatePauseGame->getContentSize().height / 2));
+	//Button
+	createButton();
 
-	buttonCreatePauseGame->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
-		switch (type)
-		{
-		case ui::Widget::TouchEventType::BEGAN:
-			break;
-		case ui::Widget::TouchEventType::ENDED:
-			isPausedGame = !isPausedGame;
-			if (isPausedGame)
-			{
-				btnPauseGame->setTexture("Play.png");
-				Director::getInstance()->pause();
-				//CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);
-			}
-			else
-			{
-				btnPauseGame->setTexture("Pause.png");
-				Director::getInstance()->resume();
-				//CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-			}
-			break;
-
-		default:
-			break;
-		}
-	});
-
-	auto shootButton = MenuItemImage::create(IMG_SHOOT_BTN, IMG_SHOOT_BTN,
-		[](Ref *event) {
-
-		if (!isPausedGame)
-		{
-			snake->Shoot();
-			if (currentBullet > 0)
-			{
-				currentBullet--;
-			}
-			else
-			{
-				currentBullet = 0;
-			}
-		}			
-	});
-	
-	shootButton->setPosition(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, SNAKE_Y_POSITION);	
-
-	this->addChild(btnPauseGame, 1);
-	this->addChild(buttonCreatePauseGame, 0);
-	auto menuImage = Menu::create( shootButton, nullptr);
-	menuImage->setPosition(Vec2::ZERO);
-	addChild(menuImage);
+	//Sound
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();	
+	audio->playBackgroundMusic("DefenseLine.mp3", true);
 
 	//Score
 	TextOnScreen();
 
+	//Snake
 	snake = new Snake(this);
 	snake->Init();
 	currentBullet = Snake::mBullets.size();
@@ -128,41 +73,20 @@ bool SceneNewGame::init()
 
 	/*Touch Listener*/
 	auto listenerTouch = EventListenerTouchOneByOne::create();
+	listenerTouch->setSwallowTouches(true);
 	listenerTouch->onTouchBegan = CC_CALLBACK_2(SceneNewGame::onTouchBegan, this);
 	listenerTouch->onTouchMoved = CC_CALLBACK_2(SceneNewGame::onTouchMoved, this);
 	listenerTouch->onTouchEnded = CC_CALLBACK_2(SceneNewGame::onTouchEnded, this);
 	listenerTouch->onTouchCancelled = CC_CALLBACK_2(SceneNewGame::onTouchCancelled, this);
-
-	listenerTouch->setSwallowTouches(true);
+	
 	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listenerTouch, this);
-
-	int typeRock;
-	for (int i = 0; i < MAX_ROCK; i++)
-	{
-		typeRock = random(1, 5);		
-		Rock* rock = new Rock(this, typeRock);		
-		rock->setAlive(false);
-		mRocks.push_back(rock);
-	}
-
-	for (int i = 0; i < MAX_BULLET; i++)
-	{		
-		Item* item_bullet = new Item(this);		
-		item_bullet->setAlive(false);
-		bulletItems.push_back(item_bullet);
-	}	
-
-	for (int i = 0; i < 2; i++)
-	{
-		Heart* heart = new Heart(this);
-		heart->setAlive(false);
-		gHearts.push_back(heart);
-	}
+	
+	//create Obstacles and Items
+	createConstruction();
 	
 	scheduleUpdate();
 	return true;
 }
-
 void SceneNewGame::update(float delta)
 {
 	if (!isPausedGame)
@@ -321,45 +245,41 @@ void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 }
 
 void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
-{
+{		
 	if (!isPausedGame)
-	{	
+	{
 		if (true == isTouchDown)
 		{
-			if (initialTouchPos0 - currentTouchPos0 > 0 )
-			{
-				//CCLOG("SWIPED LEFT");
-				xMovement = -1;
-				
-			}
-
-			else if (initialTouchPos0 < SCREEN_HALF)
+			if (currentTouchPos0 < SCREEN_HALF)
 			{
 				xMovement = -1;
-				//isTouchDown = false;
-			}
+			}		
 
-			else if (initialTouchPos0 - currentTouchPos0 < 0 )
+			if (initialTouchPos0 - currentTouchPos0 < 0)
 			{
-				//CCLOG("SWIPED RIGHT");
+				//CCLOG("SWIPED RIGHT");				
 				xMovement = 1;
-				//isTouchDown = false;
+			}
+
+			if (currentTouchPos0 > SCREEN_HALF)
+			{				
+				xMovement = 1;
 			}	
 
-			else if (initialTouchPos0 > SCREEN_HALF)
+			if (initialTouchPos0 - currentTouchPos0 > 0)
 			{
-				xMovement = 1;
-				//isTouchDown = false;
+				//CCLOG("SWIPED LEFT");				
+				xMovement = -1;
 			}
-		
-				newPosX = snake->GetPosistion().x + STEP *xMovement;
-				if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
-				{
-					snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));					
-				}
-				isTouchDown = false;
-		}		
-	}
+		}
+		newPosX = snake->GetPosistion().x + STEP *xMovement;		
+		if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
+		{
+			snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
+		}
+
+		isTouchDown = false;
+	}	
 }
 
 void SceneNewGame::onTouchCancelled(cocos2d::Touch * touch, cocos2d::Event * event)
@@ -380,6 +300,90 @@ void SceneNewGame::TextOnScreen()
 	bulletLabel->setAlignment(cocos2d::TextHAlignment::CENTER);
 	bulletLabel->setPosition(label->getPosition() - Vec2(0,50));
 	addChild(bulletLabel);
+}
+
+void SceneNewGame::createButton()
+{
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto buttonCreatePauseGame = ui::Button::create(IMG_PAUSE_BTN, IMG_PAUSE_BTN, IMG_PAUSE_BTN);
+	btnPauseGame = Sprite::create(IMG_PAUSE_BTN);
+	buttonCreatePauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, visibleSize.height - buttonCreatePauseGame->getContentSize().height / 2));
+	btnPauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, visibleSize.height - buttonCreatePauseGame->getContentSize().height / 2));
+
+	buttonCreatePauseGame->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			isPausedGame = !isPausedGame;
+			if (isPausedGame)
+			{
+				btnPauseGame->setTexture(IMG_PLAY_BTN);
+				Director::getInstance()->pause();
+				CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);
+			}
+			else
+			{
+				btnPauseGame->setTexture(IMG_PAUSE_BTN);
+				Director::getInstance()->resume();
+				CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+			}
+			break;
+
+		default:
+			break;
+		}
+	});
+	auto shootButton = MenuItemImage::create(IMG_SHOOT_BTN, IMG_SHOOT_BTN,
+		[](Ref *event) {
+		if (!isPausedGame)
+		{
+			snake->Shoot();
+			if (currentBullet > 0)
+			{
+				currentBullet--;
+			}
+			else
+			{
+				currentBullet = 0;
+			}
+		}
+	});
+
+	shootButton->setPosition(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, SNAKE_Y_POSITION);
+
+	this->addChild(btnPauseGame, 1);
+	this->addChild(buttonCreatePauseGame, 0);
+	auto menuImage = Menu::create(shootButton, nullptr);
+	menuImage->setPosition(Vec2::ZERO);
+	this->addChild(menuImage);
+}
+
+void SceneNewGame::createConstruction()
+{
+	int typeRock;
+	for (int i = 0; i < MAX_ROCK; i++)
+	{
+		typeRock = random(1, 5);
+		Rock* rock = new Rock(this, typeRock);
+		rock->setAlive(false);
+		mRocks.push_back(rock);
+	}
+
+	for (int i = 0; i < MAX_BULLET; i++)
+	{
+		Item* item_bullet = new Item(this);
+		item_bullet->setAlive(false);
+		bulletItems.push_back(item_bullet);
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		Heart* heart = new Heart(this);
+		heart->setAlive(false);
+		gHearts.push_back(heart);
+	}
 }
 
 SceneNewGame::~SceneNewGame()

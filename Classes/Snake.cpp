@@ -6,6 +6,7 @@
 #include "Heart.h"
 #include "GameOverScene.h"
 #include <algorithm>
+#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
 int SceneNewGame::currentBullet = INITIAL_BULLET;
@@ -13,15 +14,17 @@ int SceneNewGame::score;
 std::vector<Bullet*> mBullets;
 std::vector<Heart*> mHearts;
 int countHeart = 0;
+auto effectShoot = CocosDenshion::SimpleAudioEngine::getInstance();
+auto effectExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
 
 Snake::Snake(cocos2d::Scene * scene)
 {
 	mScene = scene;
 	
 	Vector<SpriteFrame*> frames;
-	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 22, 114)));
-	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 22, 114)));
-	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 22, 114)));
+	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 72, 128)));
+	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 72, 128)));
+	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 72, 128)));
 
 	auto animation = Animation::createWithSpriteFrames(frames, 0.1f);
 	auto animate = Animate::create(animation);
@@ -105,7 +108,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 						auto gameOverScene = GameOverScene::create(); 						
 						gameOverScene->getLayer()->getLabel()->setString("Score is: " + std::to_string(SceneNewGame::score));
 						Director::sharedDirector()->replaceScene(gameOverScene);						
-					}					
+					}				
 					continue;
 				}				
 			}
@@ -114,12 +117,13 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 			{
 				Bullet *b = mBullets.at(j);
 				if (b->isAlive() && r->GetBound().intersectsRect(b->GetBound()))
-				{											
+				{					
 					b->setId(-1);						
 					b->setAlive(false);
 					r->ReduceHealth();
 					if (r->getHealth() == 0)
 					{
+						effectExplosion->playEffect("Explosion.mp3", false, 1.0f, 1.0f, 1.0f);
 						SceneNewGame::score += (BASE_SCORE * r->getType());
 						r->setAlive(false);
 					}					
@@ -138,7 +142,12 @@ void Snake::Action()
 }
 
 void Snake::Shoot()
-{
+{		
+	if (mBullets.size() != 0) 
+	{
+		effectShoot->playEffect("ShootSound.mp3", false, 0.5f, 0.5f, 0.5f);
+	}	
+
 	for (int i = 0; i < mBullets.size(); i++)
 	{		
 		Bullet *bullet = mBullets.at(i);

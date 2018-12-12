@@ -1,7 +1,10 @@
 #include "GameOverScene.h"
 #include "MenuScreen.h"
 #include "SceneNewGame.h"
+#include "SimpleAudioEngine.h"
+
 USING_NS_CC;
+auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 
 bool GameOverScene::init()
 {
@@ -65,6 +68,7 @@ bool GameOverLayer::init()
 
 void GameOverLayer::gameOverDone()
 {
+	audio->stopBackgroundMusic();
     Director::getInstance()->replaceScene(MenuScreen::createScene());
 }
 

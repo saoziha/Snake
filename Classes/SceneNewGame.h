@@ -27,6 +27,8 @@ public:
 	virtual void onTouchCancelled(cocos2d::Touch* touch, cocos2d::Event *event);
 
 	void TextOnScreen();
+	void createButton();
+	void createConstruction();
 	virtual ~SceneNewGame();
 private:
 	std::vector<Rock*> mRocks;
