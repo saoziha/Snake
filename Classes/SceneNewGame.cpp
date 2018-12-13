@@ -7,6 +7,7 @@
 #include "Heart.h"
 #include "ui/CocosGUI.h"
 #include "SimpleAudioEngine.h"
+#include "MenuScreen.h"
 
 USING_NS_CC;
 
@@ -321,11 +322,11 @@ void SceneNewGame::createButton()
 			{
 				btnPauseGame->setTexture(IMG_PLAY_BTN);
 				Director::getInstance()->pause();
-				CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);
+				CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);	
 			}
 			else
 			{
-				btnPauseGame->setTexture(IMG_PAUSE_BTN);
+				btnPauseGame->setTexture(IMG_PAUSE_BTN);				
 				Director::getInstance()->resume();
 				CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 			}
@@ -358,6 +359,7 @@ void SceneNewGame::createButton()
 	auto menuImage = Menu::create(shootButton, nullptr);
 	menuImage->setPosition(Vec2::ZERO);
 	this->addChild(menuImage);
+	
 }
 
 void SceneNewGame::createConstruction()

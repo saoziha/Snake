@@ -27,10 +27,7 @@ bool MenuScreen::init()
 
 	//Menu String
 	auto newGame = MenuItemImage::create(IMG_PLAY_BTN,IMG_PLAY_BTN, [](Ref *event) {
-		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
-		auto gameOverScene = GameOverScene::create();
-		gameOverScene->getLayer()->getLabel()->setString("Current Score: " + std::to_string(SceneNewGame::score));
-		Director::sharedDirector()->replaceScene(gameOverScene);
+		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));		
 	});	
 
 	auto about = MenuItemFont::create("About", [](Ref *event) {

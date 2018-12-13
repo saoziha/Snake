@@ -5,7 +5,7 @@
 #include "Define.h"
 
 USING_NS_CC;
-auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+
 const char *HIGH_SCORE = "key";
 
 bool GameOverScene::init()
@@ -84,6 +84,7 @@ bool GameOverLayer::init()
 
 void GameOverLayer::gameOverDone()
 {
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
 	audio->stopBackgroundMusic();
     Director::getInstance()->replaceScene(MenuScreen::createScene());
 }

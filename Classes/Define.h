@@ -17,6 +17,8 @@
 #define IMG_BACKGROUND "background.png"
 #define IMG_PAUSE_BTN "Pause.png"
 #define IMG_PLAY_BTN "Play.png"
+#define IMG_RESUME_BTN "resume.png"
+#define IMG_QUIT_BTN "quit.png"
 
 #define ROCK_FALL_STEP_MIN 5
 #define ROCK_FALL_STEP_MAX 10

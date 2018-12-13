@@ -11,7 +11,7 @@ public:
 	static int currentBullet;
 	static int score;
 	static int heart;	
-
+	
 	virtual bool init();
 	virtual void update(float delta);
 	CREATE_FUNC(SceneNewGame);

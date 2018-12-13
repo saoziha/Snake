@@ -14,18 +14,15 @@ int SceneNewGame::score;
 std::vector<Bullet*> mBullets;
 std::vector<Heart*> mHearts;
 int countHeart = 0;
-auto effectShoot = CocosDenshion::SimpleAudioEngine::getInstance();
-auto effectExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
-auto effectItem = CocosDenshion::SimpleAudioEngine::getInstance();
 
 Snake::Snake(cocos2d::Scene * scene)
 {
 	mScene = scene;
 	
 	Vector<SpriteFrame*> frames;
-	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 72, 128)));
-	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 72, 128)));
-	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 72, 128)));
+	frames.pushBack(SpriteFrame::create("Snake1.png", Rect(0, 0, 22, 114)));
+	frames.pushBack(SpriteFrame::create("Snake2.png", Rect(0, 0, 22, 114)));
+	frames.pushBack(SpriteFrame::create("Snake3.png", Rect(0, 0, 22, 114)));
 
 	auto animation = Animation::createWithSpriteFrames(frames, 0.1f);
 	auto animate = Animate::create(animation);
@@ -81,6 +78,7 @@ void Snake::Update()
 
 void Snake::Colission(std::vector<Rock*> mRocks)
 {
+	auto effectExplosion = CocosDenshion::SimpleAudioEngine::getInstance();
 	for (int i = 0; i < mRocks.size(); i++)
 	{
 		Rock * r = mRocks.at(i);
@@ -144,6 +142,7 @@ void Snake::Action()
 
 void Snake::Shoot()
 {		
+	auto effectShoot = CocosDenshion::SimpleAudioEngine::getInstance();
 	if (mBullets.size() != 0) 
 	{
 		effectShoot->playEffect("ShootSound.mp3", false, 0.5f, 0.5f, 0.5f);
@@ -180,6 +179,7 @@ void Snake::shakeScreen(int level)
 
 void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartItems)
 {
+	auto effectItem = CocosDenshion::SimpleAudioEngine::getInstance();
 	for (int i = 0; i < mItems.size(); i++)
 	{
 		Item *item = mItems.at(i);
