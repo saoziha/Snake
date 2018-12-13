@@ -3,9 +3,8 @@
 #include "SceneNewGame.h"
 #include "SceneOption.h"
 #include "Snake.h"
-
+#include "GameOverScene.h"
 USING_NS_CC;
-
 
 Scene* MenuScreen::createScene()
 {
@@ -26,14 +25,13 @@ bool MenuScreen::init()
 	sprite->setPosition(screenSize / 2);
 	this->addChild(sprite, 0);
 
-
 	//Menu String
-	auto newGame = MenuItemFont::create("New Game", [](Ref *event) {		
-		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
-	});
-	/*auto options = MenuItemFont::create("Options", [](Ref *event) {
-		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneOption::createScene()));
-	});*/
+	auto newGame = MenuItemImage::create(IMG_PLAY_BTN,IMG_PLAY_BTN, [](Ref *event) {
+		//Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
+		auto gameOverScene = GameOverScene::create();
+		gameOverScene->getLayer()->getLabel()->setString("Current Score: " + std::to_string(SceneNewGame::score));
+		Director::sharedDirector()->replaceScene(gameOverScene);
+	});	
 
 	auto about = MenuItemFont::create("About", [](Ref *event) {
 		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneAbout::createScene()));
@@ -43,8 +41,7 @@ bool MenuScreen::init()
 		CCDirector::sharedDirector()->end();
 	});
 
-	newGame->setPosition(screenSize.width / 2, screenSize.height - 200);
-	//options->setPosition(newGame->getPosition() - Vec2(0, 50));
+	newGame->setPosition(screenSize.width / 2, screenSize.height - 200);	
 	about->setPosition(newGame->getPosition() - Vec2(0, 50));
 	quit->setPosition(about->getPosition() - Vec2(0, 50));
 

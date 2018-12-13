@@ -107,7 +107,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 					else
 					{
 						auto gameOverScene = GameOverScene::create(); 						
-						gameOverScene->getLayer()->getLabel()->setString("Score is: " + std::to_string(SceneNewGame::score));
+						gameOverScene->getLayer()->getLabel()->setString("Current Score: " + std::to_string(SceneNewGame::score));
 						Director::sharedDirector()->replaceScene(gameOverScene);						
 					}				
 					continue;
