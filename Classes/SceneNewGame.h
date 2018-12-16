@@ -28,7 +28,7 @@ public:
 
 	void TextOnScreen();
 	void createButton();
-	void createConstruction();	
+	void createConstruction();		
 	virtual ~SceneNewGame();
 private:
 	std::vector<Rock*> mRocks;

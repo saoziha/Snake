@@ -33,7 +33,7 @@ Snake::Snake(cocos2d::Scene * scene)
 }
 
 Snake::~Snake()
-{	
+{		
 }
 
 void Snake::Init()
@@ -42,12 +42,13 @@ void Snake::Init()
 	if (mBullets.size() > 0)
 	{
 		DeleteBullets();
+		log("Delete initial bullets and hearts");
 	}
+
 	for (int i = 0; i < INITIAL_BULLET; i++)
 	{
 		Bullet *b = new Bullet(mScene);
-		mBullets.push_back(b);
-		//b->setAlive(false);
+		mBullets.push_back(b);		
 	}
 
 	for (int i = 0; i < INITIAL_HEART; i++)
@@ -169,6 +170,14 @@ void Snake::DeleteBullets()
 		mBullets.erase(mBullets.begin() + i);
 	}
 	mBullets.clear();
+
+	for (int i = 0; i < mHearts.size(); i++)
+	{
+		Heart * b = mHearts.at(i);
+		delete b;
+		mHearts.erase(mHearts.begin() + i);
+	}
+	mHearts.clear();
 }
 
 void Snake::shakeScreen(int level)

@@ -12,6 +12,9 @@
 USING_NS_CC;
 
 Snake *snake;
+std::vector<Rock*> mRocks;
+std::vector<Item*> bulletItems;
+std::vector<Heart*> gHearts;
 float xMovement = 0;
 int framesCount;
 float newPosX = 0;
@@ -35,12 +38,15 @@ Scene* SceneNewGame::createScene()
 }
 
 bool SceneNewGame::init()
-{
+{	
 	if (!Scene::init())
 	{
 		return false;
 	}
-	
+
+	isPausedGame = false;
+	Director::getInstance()->resume();
+
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	//Default index
 	framesCount = 0;
@@ -48,6 +54,9 @@ bool SceneNewGame::init()
 
 	//Button
 	createButton();
+
+	//create Obstacles and Items
+	createConstruction();
 
 	//Sound
 	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();	
@@ -59,6 +68,7 @@ bool SceneNewGame::init()
 	//Snake
 	snake = new Snake(this);
 	snake->Init();
+	log("Snake created!");
 	currentBullet = Snake::mBullets.size();
 
 	/*KeyBoard listener*/
@@ -75,10 +85,7 @@ bool SceneNewGame::init()
 	listenerTouch->onTouchEnded = CC_CALLBACK_2(SceneNewGame::onTouchEnded, this);
 	listenerTouch->onTouchCancelled = CC_CALLBACK_2(SceneNewGame::onTouchCancelled, this);
 	
-	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listenerTouch, this);
-	
-	//create Obstacles and Items
-	createConstruction();
+	this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(listenerTouch, this);	
 	
 	scheduleUpdate();
 	return true;
@@ -322,7 +329,7 @@ void SceneNewGame::createButton()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:		
-			Director::sharedDirector()->replaceScene(MenuScreen::create());
+			Director::getInstance()->replaceScene(MenuScreen::create());
 			log("btnHome clicked!");
 			break;
 		default:
@@ -420,7 +427,31 @@ void SceneNewGame::createConstruction()
 }
 
 SceneNewGame::~SceneNewGame()
-{
-	delete snake;
+{	
+	for (int i = 0; i < bulletItems.size(); i++)
+	{
+		Item * t = bulletItems.at(i);
+		delete t;
+		bulletItems.erase(bulletItems.begin() + i);
+	}
+	bulletItems.clear();
+
+	for (int i = 0; i < mRocks.size(); i++)
+	{
+		Rock * r = mRocks.at(i);
+		delete r;
+		mRocks.erase(mRocks.begin() + i);
+	}
+	mRocks.clear();
+
+	for (int i = 0; i < gHearts.size(); i++)
+	{
+		Heart * h = gHearts.at(i);
+		delete h;
+		gHearts.erase(gHearts.begin() + i);
+	}
+	gHearts.clear();
+
+	log("CLear OBject!");
 }
 

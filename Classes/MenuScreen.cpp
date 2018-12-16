@@ -37,7 +37,7 @@ bool MenuScreen::init()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:
-			Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
+			Director::getInstance()->replaceScene( SceneNewGame::createScene());
 			break;
 		default:
 			break;
