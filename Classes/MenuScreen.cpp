@@ -4,6 +4,7 @@
 #include "SceneOption.h"
 #include "Snake.h"
 #include "GameOverScene.h"
+#include "ui/CocosGUI.h"
 USING_NS_CC;
 
 Scene* MenuScreen::createScene()
@@ -22,28 +23,59 @@ bool MenuScreen::init()
 
 	//background
 	auto sprite = Sprite::create(IMG_BACKGROUND);
-	sprite->setPosition(screenSize / 2);
+	sprite->setPosition(screenSize/2);
 	this->addChild(sprite, 0);
 
-	//Menu String
-	auto newGame = MenuItemImage::create(IMG_PLAY_BTN,IMG_PLAY_BTN, [](Ref *event) {
-		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));		
-	});	
+	//Menu String	
+	auto newGame = ui::Button::create(IMG_START_BTN, IMG_START_BTN_PRESSED, IMG_START_BTN_PRESSED);
+	auto about = ui::Button::create(IMG_ABOUT_BTN, IMG_ABOUT_BTN_PRESSED, IMG_ABOUT_BTN_PRESSED);
+	auto quit = ui::Button::create(IMG_ABOUT_BTN, IMG_ABOUT_BTN_PRESSED, IMG_ABOUT_BTN_PRESSED);
 
-	auto about = MenuItemFont::create("About", [](Ref *event) {
-		Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneAbout::createScene()));
+	newGame->addTouchEventListener([](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneNewGame::createScene()));
+			break;
+		default:
+			break;
+		}
 	});
 
-	auto quit = MenuItemFont::create("Quit", [](Ref *event) {
-		CCDirector::sharedDirector()->end();
+	about->addTouchEventListener([](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, SceneAbout::createScene()));
+			break;
+		default:
+			break;
+		}
 	});
 
-	newGame->setPosition(screenSize.width / 2, screenSize.height - 200);	
-	about->setPosition(newGame->getPosition() - Vec2(0, 50));
-	quit->setPosition(about->getPosition() - Vec2(0, 50));
+	quit->addTouchEventListener([](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			Director::getInstance()->end();
+			break;
+		default:
+			break;
+		}
+	});
 
-	auto menuString = Menu::create(newGame, about,quit, nullptr);
-	menuString->setPosition(Vec2::ZERO);
-	addChild(menuString);
+	newGame->setPosition(Vec2(screenSize.width / 2, screenSize.height - 400));	
+	about->setPosition(newGame->getPosition() - Vec2(0, 100));
+	quit->setPosition(about->getPosition() - Vec2(0, 100));
+
+	addChild(newGame);
+	addChild(about);
+	addChild(quit);
 	return true;
 }

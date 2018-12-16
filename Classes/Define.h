@@ -15,10 +15,19 @@
 #define IMG_HEART_ITEM "life.png"
 #define IMG_SHOOT_BTN "ShootButton.png"
 #define IMG_BACKGROUND "background.png"
-#define IMG_PAUSE_BTN "Pause.png"
+#define IMG_PAUSE_BTN "PauseButton.png"
 #define IMG_PLAY_BTN "Play.png"
+#define IMG_START_BTN "StartButton.png"
+#define IMG_START_BTN_PRESSED "StartButtonPressed.png"
+#define IMG_ABOUT_BTN "AboutButton.png"
+#define IMG_ABOUT_BTN_PRESSED "AboutButtonPressed.png"
 #define IMG_RESUME_BTN "resume.png"
 #define IMG_QUIT_BTN "quit.png"
+#define IMG_POPUP_BACKGROUND "PopupMenu.png"
+#define IMG_BACK_TO_MENU_BTN "BackToMenuButton.png"
+#define IMG_BACK_TO_MENU_BTN_PRESSED "BackToMenuButtonPressed.png"
+#define IMG_RESUME_BTN_POPUP "ResumeButton.png"
+#define IMG_RESUME_BTN_POPUP_PRESSED "ResumeButtonPressed.png"
 
 #define ROCK_FALL_STEP_MIN 5
 #define ROCK_FALL_STEP_MAX 10

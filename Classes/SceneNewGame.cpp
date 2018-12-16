@@ -25,19 +25,13 @@ float currentTouchPos0;
 Sprite * btnPauseGame;
 bool isPausedGame = false;
 
-SceneNewGame* SceneNewGame::createScene()
-{	
-	SceneNewGame* sController = nullptr;
-	if (!sController)
-	{
-		sController = new SceneNewGame();
-		sController->init();
-	}
-	return sController;
-}
+Sprite * backgroudPopup;
+ui::Button * btnHome;
+ui::Button * btnResume;
 
-SceneNewGame::SceneNewGame()
-{
+Scene* SceneNewGame::createScene()
+{	
+	return SceneNewGame::create();
 }
 
 bool SceneNewGame::init()
@@ -47,6 +41,7 @@ bool SceneNewGame::init()
 		return false;
 	}
 	
+	auto visibleSize = Director::getInstance()->getVisibleSize();
 	//Default index
 	framesCount = 0;
 	score = 0;	
@@ -305,37 +300,71 @@ void SceneNewGame::TextOnScreen()
 
 void SceneNewGame::createButton()
 {
-	auto visibleSize = Director::getInstance()->getVisibleSize();
+	btnHome = ui::Button::create(IMG_BACK_TO_MENU_BTN, IMG_BACK_TO_MENU_BTN_PRESSED, IMG_BACK_TO_MENU_BTN);
+	btnResume = ui::Button::create(IMG_RESUME_BTN_POPUP, IMG_RESUME_BTN_POPUP_PRESSED, IMG_RESUME_BTN_POPUP);
+	auto visibleSize = Director::getInstance()->getVisibleSize();	
 	auto buttonCreatePauseGame = ui::Button::create(IMG_PAUSE_BTN, IMG_PAUSE_BTN, IMG_PAUSE_BTN);
 	btnPauseGame = Sprite::create(IMG_PAUSE_BTN);
-	buttonCreatePauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, visibleSize.height - buttonCreatePauseGame->getContentSize().height / 2));
-	btnPauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, visibleSize.height - buttonCreatePauseGame->getContentSize().height / 2));
+	buttonCreatePauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, HEART_LOCATION_Y));
+	btnPauseGame->setPosition(Vec2(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, HEART_LOCATION_Y));	
+
+	backgroudPopup = Sprite::create(IMG_POPUP_BACKGROUND);
+	backgroudPopup->setPosition(Vec2(SCREEN_W/2,SCREEN_H/2));
+	backgroudPopup->setVisible(false);
+	btnHome->setPosition(Vec2(SCREEN_W / 2, SCREEN_H / 2));
+	btnHome->setVisible(false);
+	btnResume->setPosition(btnHome->getPosition() - Vec2(0, 50));
+	btnResume->setVisible(false);
+
+	btnHome->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:		
+			Director::sharedDirector()->replaceScene(MenuScreen::create());
+			log("btnHome clicked!");
+			break;
+		default:
+			break;
+		}
+	});
+
+	btnResume->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			backgroudPopup->setVisible(false);
+			btnHome->setVisible(false);
+			btnResume->setVisible(false);
+			isPausedGame = false;
+			CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+			Director::getInstance()->resume();			
+			break;
+		default:
+			break;
+		}
+	});
 
 	buttonCreatePauseGame->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
 		switch (type)
 		{
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
-		case ui::Widget::TouchEventType::ENDED:
-			isPausedGame = !isPausedGame;
-			if (isPausedGame)
-			{
-				btnPauseGame->setTexture(IMG_PLAY_BTN);
-				Director::getInstance()->pause();
-				CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);	
-			}
-			else
-			{
-				btnPauseGame->setTexture(IMG_PAUSE_BTN);				
-				Director::getInstance()->resume();
-				CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-			}
-			break;
-
+		case ui::Widget::TouchEventType::ENDED:							
+			Director::getInstance()->pause();
+			CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);
+			backgroudPopup->setVisible(true);
+			btnHome->setVisible(true);
+			btnResume->setVisible(true);
+			isPausedGame = true;			
 		default:
 			break;
 		}
 	});
+
 	auto shootButton = MenuItemImage::create(IMG_SHOOT_BTN, IMG_SHOOT_BTN,
 		[](Ref *event) {
 		if (!isPausedGame)
@@ -352,14 +381,16 @@ void SceneNewGame::createButton()
 		}
 	});
 
-	shootButton->setPosition(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2, SNAKE_Y_POSITION);
+	shootButton->setPosition(visibleSize.width - buttonCreatePauseGame->getContentSize().width / 2 - 5, SNAKE_Y_POSITION);
 
 	this->addChild(btnPauseGame, 1);
-	this->addChild(buttonCreatePauseGame, 0);
+	this->addChild(buttonCreatePauseGame, 0);	
 	auto menuImage = Menu::create(shootButton, nullptr);
 	menuImage->setPosition(Vec2::ZERO);
 	this->addChild(menuImage);
-	
+	this->addChild(backgroudPopup, 2);
+	this->addChild(btnHome, 3);
+	this->addChild(btnResume, 3);
 }
 
 void SceneNewGame::createConstruction()
@@ -392,3 +423,4 @@ SceneNewGame::~SceneNewGame()
 {
 	delete snake;
 }
+
