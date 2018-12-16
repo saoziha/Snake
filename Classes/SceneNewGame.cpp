@@ -329,7 +329,8 @@ void SceneNewGame::createButton()
 		case ui::Widget::TouchEventType::BEGAN:
 			break;
 		case ui::Widget::TouchEventType::ENDED:		
-			Director::getInstance()->replaceScene(MenuScreen::create());
+			Director::getInstance()->replaceScene(TransitionFlipX::create(0.5, MenuScreen::createScene()));
+			Director::getInstance()->resume();
 			log("btnHome clicked!");
 			break;
 		default:
