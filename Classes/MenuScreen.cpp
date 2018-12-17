@@ -29,7 +29,7 @@ bool MenuScreen::init()
 	//Menu String	
 	auto newGame = ui::Button::create(IMG_START_BTN, IMG_START_BTN_PRESSED, IMG_START_BTN_PRESSED);
 	auto about = ui::Button::create(IMG_ABOUT_BTN, IMG_ABOUT_BTN_PRESSED, IMG_ABOUT_BTN_PRESSED);
-	auto quit = ui::Button::create(IMG_ABOUT_BTN, IMG_ABOUT_BTN_PRESSED, IMG_ABOUT_BTN_PRESSED);
+	auto quit = ui::Button::create(IMG_QUIT_BTN, IMG_QUIT_BTN_PRESSED, IMG_QUIT_BTN_PRESSED);
 
 	newGame->addTouchEventListener([](Ref* sender, ui::Widget::TouchEventType type) {
 		switch (type)
