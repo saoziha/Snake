@@ -22,9 +22,9 @@ int score;
 Label *label;
 Label *bulletLabel;
 int currentBullet = INITIAL_BULLET;
-bool isTouchDown;
-float initialTouchPos0;
-float currentTouchPos0;
+bool isTouchDown = false;
+float initialTouchPos0 = 0 ;
+float currentTouchPos0 = 0;
 Sprite * btnPauseGame;
 bool isPausedGame = false;
 
@@ -45,7 +45,6 @@ bool SceneNewGame::init()
 	}
 
 	isPausedGame = false;
-	Director::getInstance()->resume();
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	//Default index
@@ -243,7 +242,7 @@ bool SceneNewGame::onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event)
 
 void SceneNewGame::onTouchMoved(cocos2d::Touch * touch, cocos2d::Event * event)
 {
-	isTouchDown = true;
+	//isTouchDown = true;
 	currentTouchPos0 = touch->getLocation().x;	
 }
 
@@ -253,34 +252,36 @@ void SceneNewGame::onTouchEnded(cocos2d::Touch * touch, cocos2d::Event * event)
 	{
 		if (true == isTouchDown)
 		{
+
 			if (currentTouchPos0 < SCREEN_HALF)
 			{
+				log("touch left!");
 				xMovement = -1;
-			}		
+			}
 
 			if (initialTouchPos0 - currentTouchPos0 < 0)
 			{
-				//CCLOG("SWIPED RIGHT");				
+				CCLOG("SWIPED RIGHT");
 				xMovement = 1;
 			}
 
 			if (currentTouchPos0 > SCREEN_HALF)
-			{				
+			{
+				log("touch right!");
 				xMovement = 1;
-			}	
+			}
 
 			if (initialTouchPos0 - currentTouchPos0 > 0)
 			{
-				//CCLOG("SWIPED LEFT");				
+				CCLOG("SWIPED LEFT");
 				xMovement = -1;
 			}
 		}
-		newPosX = snake->GetPosistion().x + STEP *xMovement;		
+		newPosX = snake->GetPosistion().x + STEP *xMovement;
 		if (newPosX >= MAX_MOVE_LEFT_W && newPosX <= MAX_MOVE_RIGHT_W)
 		{
 			snake->setPosition(Vec2(newPosX, snake->GetPosistion().y));
 		}
-
 		isTouchDown = false;
 	}	
 }
@@ -348,7 +349,7 @@ void SceneNewGame::createButton()
 			btnHome->setVisible(false);
 			btnResume->setVisible(false);
 			isPausedGame = false;
-			CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
 			Director::getInstance()->resume();			
 			break;
 		default:
@@ -363,7 +364,7 @@ void SceneNewGame::createButton()
 			break;
 		case ui::Widget::TouchEventType::ENDED:							
 			Director::getInstance()->pause();
-			CocosDenshion::SimpleAudioEngine::getInstance()->stopBackgroundMusic(false);
+			CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
 			backgroudPopup->setVisible(true);
 			btnHome->setVisible(true);
 			btnResume->setVisible(true);
