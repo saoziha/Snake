@@ -349,7 +349,7 @@ void SceneNewGame::createButton()
 			btnHome->setVisible(false);
 			btnResume->setVisible(false);
 			isPausedGame = false;
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->resumeBackgroundMusic();
+			CocosDenshion::SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
 			Director::getInstance()->resume();			
 			break;
 		default:
@@ -364,7 +364,7 @@ void SceneNewGame::createButton()
 			break;
 		case ui::Widget::TouchEventType::ENDED:							
 			Director::getInstance()->pause();
-			CocosDenshion::SimpleAudioEngine::sharedEngine()->pauseBackgroundMusic();
+			CocosDenshion::SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
 			backgroudPopup->setVisible(true);
 			btnHome->setVisible(true);
 			btnResume->setVisible(true);

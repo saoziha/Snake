@@ -123,7 +123,7 @@ void Snake::Colission(std::vector<Rock*> mRocks)
 					r->ReduceHealth();
 					if (r->getHealth() == 0)
 					{
-						effectExplosion->playEffect("Explosion.mp3", false, 1.0f, 1.0f, 1.0f);
+						effectExplosion->playEffect("Explosion.mp3", false, 0.5f, 0.5f, 0.5f);
 						SceneNewGame::score += (BASE_SCORE * r->getType());
 						r->setAlive(false);
 					}					
@@ -146,7 +146,7 @@ void Snake::Shoot()
 	auto effectShoot = CocosDenshion::SimpleAudioEngine::getInstance();
 	if (mBullets.size() != 0) 
 	{
-		effectShoot->playEffect("ShootSound.mp3", false, 1.0f, 1.0f, 1.0f);
+		effectShoot->playEffect("ShootSound.mp3", false, 0.5f, 0.5f, 0.5f);
 	}	
 
 	for (int i = 0; i < mBullets.size(); i++)
@@ -197,7 +197,7 @@ void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartI
 			if (item->GetBound().intersectsRect(this->GetBound()))
 			{
 				item->setAlive(false);	
-				ItemColiision->playEffect("ItemSound.mp3", false, 1.0f, 1.0f, 1.0f);
+				ItemColiision->playEffect("ItemSound.mp3", false, 0.5f, 0.5f, 0.5f);
 				SceneNewGame::currentBullet += ADD_BULLET_STEP;
 				for (int i = 0; i < ADD_BULLET_STEP; i++)
 				{
@@ -218,7 +218,7 @@ void Snake::CollisionItem(std::vector<Item*> mItems, std::vector<Heart*> mHeartI
 			if (heart->GetBound().intersectsRect(this->GetBound()))
 			{
 				heart->setAlive(false);		
-				ItemColiision->playEffect("ItemSound.mp3", false, 1.0f, 1.0f, 1.0f);
+				ItemColiision->playEffect("ItemSound.mp3", false, 0.5f, 0.5f, 0.5f);
 				Heart *h = new Heart(mScene);				
 				h->addHeart(mHearts.size());				
 				mHearts.push_back(h);
